@@ -7,7 +7,7 @@
 
         public string? Location { get; set; }
         public double Area { get; set; }
-        public int NumShelves { get; set; }
+        public int NumOfShelves { get; set; }
 
         public List<Shelf>? Shelves { get; set; }
     }

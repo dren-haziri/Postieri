@@ -11,55 +11,55 @@ namespace Postieri.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShelfSizesController : ControllerBase
+    public class WarehousesController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ShelfSizesController(AppDbContext context)
+        public WarehousesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/ShelfSizes
+        // GET: api/Warehouses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ShelfSize>>> GetShelfSizes()
+        public async Task<ActionResult<IEnumerable<Warehouse>>> GetWarehouse()
         {
-          if (_context.ShelfSizes == null)
+          if (_context.Warehouse == null)
           {
               return NotFound();
           }
-            return await _context.ShelfSizes.ToListAsync();
+            return await _context.Warehouse.ToListAsync();
         }
 
-        // GET: api/ShelfSizes/5
+        // GET: api/Warehouses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ShelfSize>> GetShelfSize(int id)
+        public async Task<ActionResult<Warehouse>> GetWarehouse(int id)
         {
-          if (_context.ShelfSizes == null)
+          if (_context.Warehouse == null)
           {
               return NotFound();
           }
-            var shelfSize = await _context.ShelfSizes.FindAsync(id);
+            var warehouse = await _context.Warehouse.FindAsync(id);
 
-            if (shelfSize == null)
+            if (warehouse == null)
             {
                 return NotFound();
             }
 
-            return shelfSize;
+            return warehouse;
         }
 
-        // PUT: api/ShelfSizes/5
+        // PUT: api/Warehouses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShelfSize(int id, ShelfSize shelfSize)
+        public async Task<IActionResult> PutWarehouse(int id, Warehouse warehouse)
         {
-            if (id != shelfSize.ShelfSizeId)
+            if (id != warehouse.WarehouseId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(shelfSize).State = EntityState.Modified;
+            _context.Entry(warehouse).State = EntityState.Modified;
 
             try
             {
@@ -67,7 +67,7 @@ namespace Postieri.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ShelfSizeExists(id))
+                if (!WarehouseExists(id))
                 {
                     return NotFound();
                 }
@@ -80,44 +80,44 @@ namespace Postieri.Controllers
             return NoContent();
         }
 
-        // POST: api/ShelfSizes
+        // POST: api/Warehouses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ShelfSize>> PostShelfSize(ShelfSize shelfSize)
+        public async Task<ActionResult<Warehouse>> PostWarehouse(Warehouse warehouse)
         {
-          if (_context.ShelfSizes == null)
+          if (_context.Warehouse == null)
           {
-              return Problem("Entity set 'AppDbContext.ShelfSizes'  is null.");
+              return Problem("Entity set 'AppDbContext.Warehouse'  is null.");
           }
-            _context.ShelfSizes.Add(shelfSize);
+            _context.Warehouse.Add(warehouse);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetShelfSize", new { id = shelfSize.ShelfSizeId }, shelfSize);
+            return CreatedAtAction("GetWarehouse", new { id = warehouse.WarehouseId }, warehouse);
         }
 
-        // DELETE: api/ShelfSizes/5
+        // DELETE: api/Warehouses/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteShelfSize(int id)
+        public async Task<IActionResult> DeleteWarehouse(int id)
         {
-            if (_context.ShelfSizes == null)
+            if (_context.Warehouse == null)
             {
                 return NotFound();
             }
-            var shelfSize = await _context.ShelfSizes.FindAsync(id);
-            if (shelfSize == null)
+            var warehouse = await _context.Warehouse.FindAsync(id);
+            if (warehouse == null)
             {
                 return NotFound();
             }
 
-            _context.ShelfSizes.Remove(shelfSize);
+            _context.Warehouse.Remove(warehouse);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ShelfSizeExists(int id)
+        private bool WarehouseExists(int id)
         {
-            return (_context.ShelfSizes?.Any(e => e.ShelfSizeId == id)).GetValueOrDefault();
+            return (_context.Warehouse?.Any(e => e.WarehouseId == id)).GetValueOrDefault();
         }
     }
 }

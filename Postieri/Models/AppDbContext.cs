@@ -10,7 +10,6 @@ namespace Postieri.Models
         }
 
         public DbSet<Shelf> Shelves { get; set; }
-        public DbSet<ShelfSize> ShelfSizes { get; set; }
         public DbSet<Warehouse> Warehouse { get; set; }
     }
 }
