@@ -7,6 +7,7 @@ namespace Postieri.Interfaces
 {
     public interface IDispatchService
     {
-         string Dispatch(Guid managerId, Guid courierId, Guid ProductId);
+         string TransferPackage(Guid managerId, Guid courierId, Guid productId);
+         string VerifyAddress(Guid addressTo);
     }
 }

@@ -11,13 +11,15 @@ namespace Postieri.Models
         [Key]
         public Guid OrderId {get;set;}
 
-        public Product ProductId {get;set;}
+        public Guid ProductId {get;set;}
+
+        public Guid AddressTo { get; set; }
 
         public DateTime Date {get;set;}
 
-        public User CourierId {get;set;}//courier
+        public Guid CourierId {get;set;}//courier
 
-        public User ManagerId {get;set;}
+        public Guid ManagerId {get;set;}
 
         public double Price {get;set;}
     }
