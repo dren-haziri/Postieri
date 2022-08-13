@@ -26,16 +26,16 @@ namespace Postieri.Controllers
 
             string fromName = _configuration.GetSection("SendGrindEmailSettings").GetValue<string>("FromName");
 
-            var msg = new SendGridMessage
+            var email = new SendGridMessage
             {
                 From = new EmailAddress(fromEmail, fromName),
                 Subject = subject,
                 PlainTextContent = body
             };
 
-            msg.AddTo(toEmail);
+            email.AddTo(toEmail);
 
-            var response = await _sendGridClient.SendEmailAsync(msg);
+            var response = await _sendGridClient.SendEmailAsync(email);
 
             string message = response.IsSuccessStatusCode ? "Email Send" : "Email Sendin Failed";
             return Ok(message);
