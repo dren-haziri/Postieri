@@ -52,13 +52,7 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
-                    b.Property<int>("HorizSlots")
-                        .HasColumnType("int");
-
                     b.Property<int>("MaxProducts")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VertSlots")
                         .HasColumnType("int");
 
                     b.Property<int>("WarehouseId")

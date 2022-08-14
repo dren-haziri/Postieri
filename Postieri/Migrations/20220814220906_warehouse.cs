@@ -30,8 +30,6 @@ namespace Postieri.Migrations
                 {
                     ShelfId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VertSlots = table.Column<int>(type: "int", nullable: false),
-                    HorizSlots = table.Column<int>(type: "int", nullable: false),
                     WarehouseId = table.Column<int>(type: "int", nullable: false),
                     BinLetter = table.Column<string>(type: "nvarchar(1)", nullable: false),
                     MaxProducts = table.Column<int>(type: "int", nullable: false)

@@ -12,7 +12,7 @@ using Postieri.Models;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220811135336_warehouse")]
+    [Migration("20220814220906_warehouse")]
     partial class warehouse
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,7 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
-                    b.Property<int>("HorizSlots")
-                        .HasColumnType("int");
-
                     b.Property<int>("MaxProducts")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VertSlots")
                         .HasColumnType("int");
 
                     b.Property<int>("WarehouseId")
