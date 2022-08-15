@@ -12,7 +12,7 @@ using Postieri.Models;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220814220906_warehouse")]
+    [Migration("20220815074212_warehouse")]
     partial class warehouse
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
