@@ -10,21 +10,21 @@ namespace Postieri.Controllers
     public class EmailController : ControllerBase
     {
         private readonly ISendGridClient _sendGridClient;
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _getValues;
 
-        public EmailController(ISendGridClient sendGridClient, IConfiguration configuration)
+        public EmailController(ISendGridClient sendGridClient, IConfiguration getValues)
         {
             _sendGridClient = sendGridClient;
-            _configuration = configuration;
+            _getValues = getValues;
         }
 
         [HttpGet]
         [Route("send-text-mail")]
-        public async Task<IActionResult> SendPlainTextEmail(string toEmail, string subject, string body)
+        public async Task<IActionResult> SendTextEmail(string toEmail, string subject, string body)
         {
-            string fromEmail = _configuration.GetSection("SendGrindEmailSettings").GetValue<string>("FromEmail");
+            string fromEmail = _getValues.GetSection("SendGrindEmailSettings").GetValue<string>("FromEmail");
 
-            string fromName = _configuration.GetSection("SendGrindEmailSettings").GetValue<string>("FromName");
+            string fromName = _getValues.GetSection("SendGrindEmailSettings").GetValue<string>("FromName");
 
             var email = new SendGridMessage
             {
@@ -37,7 +37,7 @@ namespace Postieri.Controllers
 
             var response = await _sendGridClient.SendEmailAsync(email);
 
-            string message = response.IsSuccessStatusCode ? "Email Send" : "Email Sendin Failed";
+            string message = response.IsSuccessStatusCode ? "Email Send" : "Email Sending Failed";
             return Ok(message);
         }
     }
