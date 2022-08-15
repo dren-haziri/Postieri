@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
- using Postieri.Data;
-using Swashbuckle.AspNetCore.Filters;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
+string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+});
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
@@ -43,6 +41,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
