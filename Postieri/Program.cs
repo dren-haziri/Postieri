@@ -1,5 +1,8 @@
 global using Postieri.Interfaces;
 global using Postieri.DTOs;
+using Postieri.Data;
+using Postieri.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");

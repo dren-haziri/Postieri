@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Postieri.Interfaces; 
 using System.Runtime.InteropServices;
-
+using Postieri.Models;
 
 namespace Postieri.Services
 {
