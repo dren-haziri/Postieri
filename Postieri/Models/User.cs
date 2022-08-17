@@ -15,6 +15,7 @@ namespace Postieri
         [EmailAddress]
         public string Email { get; set; }
         public string CompanyName { get; set; }
+        public string RoleName { get; set; }
         public string Status { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime RegisterDate { get; set; } = DateTime.Now;
