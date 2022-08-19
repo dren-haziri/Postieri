@@ -19,16 +19,16 @@ namespace Postieri.Controllers
         [HttpGet]
         public async Task<ActionResult<Order>> Get()
         {
-            return Ok(await _context.Order.ToListAsync());
+            return Ok(await _context.Orders.ToListAsync());
         }
 
         [HttpPost]
         public async Task<ActionResult<List<Order>>> AddOrder(Order order)
         {
 
-            _context.Order.Add(order);
+            _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            return Ok(await _context.Order.ToListAsync());
+            return Ok(await _context.Orders.ToListAsync());
         }
      
 
@@ -36,11 +36,11 @@ namespace Postieri.Controllers
         [HttpDelete]
         public async Task<ActionResult<List<Order>>> Delete(int id)
         {
-            var order = await _context.Order.FindAsync(id);
+            var order = await _context.Orders.FindAsync(id);
             if (order == null)
                 return BadRequest("order not found");
 
-            _context.Order.Remove(order);
+            _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
             return Ok(await _context.Roles.ToListAsync());
         }
