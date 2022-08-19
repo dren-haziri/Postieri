@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Postieri.Data;
+using Postieri.Models;
 using Postieri.Models;
 
 namespace Postieri.Controllers
@@ -13,9 +15,9 @@ namespace Postieri.Controllers
     [ApiController]
     public class WarehousesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly DataContext _context;
 
-        public WarehousesController(AppDbContext context)
+        public WarehousesController(DataContext context)
         {
             _context = context;
         }

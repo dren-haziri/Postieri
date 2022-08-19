@@ -14,5 +14,8 @@ namespace Postieri.Data
 
         }
         public DbSet<Roles> Roles { get; set; }
+        public DbSet<Warehouse> Warehouse { get; set; }
+        public DbSet<Shelf> Shelves { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

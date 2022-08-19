@@ -1,15 +1,13 @@
 global using Postieri.Interfaces;
 global using Postieri.DTOs;
+using Postieri.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
-});
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Postieri.Data;
 using Postieri.Models;
 
 namespace Postieri.Controllers
@@ -13,9 +14,9 @@ namespace Postieri.Controllers
     [ApiController]
     public class ShelvesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly DataContext _context;
 
-        public ShelvesController(AppDbContext context)
+        public ShelvesController(DataContext context)
         {
             _context = context;
         }
