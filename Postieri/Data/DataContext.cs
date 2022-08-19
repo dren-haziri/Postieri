@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 
 namespace Postieri.Data
 {
-    public class DataContext :DbContext
+    public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext>options):base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
 
         }
+        public DbSet<User> Users { get; set; }
         public DbSet<Roles> Roles { get; set; }
+        public DbSet<Shelf> Shelves { get; set; }
+        public DbSet<Warehouse> Warehouse { get; set; }
     }
 }
