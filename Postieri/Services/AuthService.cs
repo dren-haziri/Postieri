@@ -84,11 +84,16 @@ namespace Postieri.Services
                 response.Success = false;
                 response.Message = "Invalid token.";
             }
+            else
+            {
+                response.Message = "Verification successful!";
 
-            user.VerifiedAt = DateTime.Now;
+                user.VerifiedAt = DateTime.Now;
+            }
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<string> { Message = "Verification successful!" };
+            //return new ServiceResponse<string> { Message = "Verification successful!" };
+            return response;
         }
 
         public async Task<ServiceResponse<string>> ForgotPassword(string email)
@@ -104,10 +109,10 @@ namespace Postieri.Services
             else
             {
                 response.Message = "You may now reset your password.";
-            }
 
-            user.PasswordResetToken = CreatePasswordResetToken();
-            user.ResetTokenExpires = DateTime.Now.AddDays(1);
+                user.PasswordResetToken = CreatePasswordResetToken();
+                user.ResetTokenExpires = DateTime.Now.AddDays(1);
+            }
             await _context.SaveChangesAsync();
 
             //return new ServiceResponse<string> { Message = "You may now reset your password." };
@@ -124,17 +129,22 @@ namespace Postieri.Services
                 response.Success = false;
                 response.Message = "Invalid Token.";
             }
+            else
+            {
+                response.Message = "Password successfully reset.";
 
-            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+                CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-            user.PasswordResetToken = null;
-            user.ResetTokenExpires = null;
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+                user.PasswordResetToken = null;
+                user.ResetTokenExpires = null;
+            }
 
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<string> { Message = "Password successfully reset." };
+            //return new ServiceResponse<string> { Message = "Password successfully reset." };
+            return response;
         }
 
         private string CreatePasswordResetToken()
