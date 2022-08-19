@@ -10,7 +10,7 @@
         public char BinLetter { get; set; }
         public int MaxProducts { get; set; }
      
-        public List<Product>? Products { get; set; }
+       public List<Product>? Products { get; set; }
     }
     
     

@@ -14,5 +14,6 @@ namespace Postieri.Data
 
         }
         public DbSet<Roles> Roles { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }

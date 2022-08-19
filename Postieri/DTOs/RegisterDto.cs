@@ -14,6 +14,8 @@ namespace Postieri
         [Required]
         public string CompanyName { get; set; }
         [Required]
+        public string RoleName { get; set; }
+        [Required]
         public string PhoneNumber { get; set; }
     }
 }
