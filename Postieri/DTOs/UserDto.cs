@@ -1,4 +1,4 @@
-﻿namespace Postieri
+﻿namespace Postieri.DTOs
 {
     public class UserDto
     {
@@ -6,6 +6,6 @@
         public string RoleName { get; set; } = string.Empty;
 
         public string Password { get; set; } = string.Empty;
- 
+
     }
 }

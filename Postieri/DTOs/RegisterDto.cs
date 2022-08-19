@@ -6,14 +6,16 @@ namespace Postieri
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Required]
         public string Username { get; set; } = string.Empty;
         [Required]
         public string Password { get; set; } = string.Empty;
         [Required]
-        public string CompanyName { get; set; }
+        public string? CompanyName { get; set; }
         [Required]
-        public string PhoneNumber { get; set; }
+        public string? RoleName { get; set; }
+        [Required]
+        public string? PhoneNumber { get; set; }
     }
 }

@@ -1,5 +1,10 @@
 global using Postieri.Interfaces;
 global using Postieri.DTOs;
+using AutoMapper;
+using Postieri.Helpers;
+using Postieri.Models;
+using Postieri.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -19,8 +24,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+
 
 var app = builder.Build();
 
