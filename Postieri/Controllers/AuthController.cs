@@ -9,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Postieri.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Configuration;
+using Postieri.Interfaces;
 
 namespace Postieri.Controllers
 {
@@ -16,85 +20,81 @@ namespace Postieri.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
-        private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IAuthService authService)
         {
-            _configuration = configuration;
+            _authService = authService;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(RegisterDto request)
+        public async Task<ActionResult<ServiceResponse<int>>> Register(RegisterDto request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            var user = new User
+            {
+                Email = request.Email,
+                Username = request.Username,
+                CompanyName = request.CompanyName,
+                RoleName = request.RoleName,
+                PhoneNumber = request.PhoneNumber,
+            };
 
-            user.Username = request.Username;
-            user.Email = request.Email;
-            user.CompanyName = request.CompanyName;
-            user.RoleName = request.RoleName;
-            user.PhoneNumber = request.PhoneNumber;
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            var response = await _authService.Register(user, request.Password);
 
-            return Ok(user);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginDto request)
+        public async Task<ActionResult<ServiceResponse<string>>> Login(LoginDto request)
         {
-            if (user.Username != request.Username)
+            var response = await _authService.Login(request.Email, request.Password);
+            if (!response.Success)
             {
-                return BadRequest("User not found.");
+                return BadRequest(response);
             }
 
-            if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                return BadRequest("Wrong password.");
-            }
-
-            string token = CreateToken(user);
-            return Ok(token);
-            //return Ok(user); //testing to see if all user.cs attributes are returned despite some of them missing in registerdto
+            return Ok(response);
         }
 
-        private string CreateToken(User user)
+        [HttpPost("verify")]
+        public async Task<ActionResult<ServiceResponse<string>>> Verify(UserVerificationDto request)
         {
-            List<Claim> claims = new List<Claim>
+            var response = await _authService.Verify(request.VerificationToken);
+            if (!response.Success)
             {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.RoleName)
-            };
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+                return BadRequest(response);
+            }
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
+            return Ok(response);
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult<ServiceResponse<string>>> ForgotPassword(ForgotPasswordDto request)
         {
-            using (var hmac = new HMACSHA512())
+            var response = await _authService.ForgotPassword(request.Email);
+            if (!response.Success)
             {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return BadRequest(response);
             }
+
+            return Ok(response);
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        [HttpPost("reset-password")]
+        public async Task<ActionResult<ServiceResponse<string>>> ResetPassword(ResetPasswordDto request)
         {
-            using (var hmac = new HMACSHA512(passwordSalt))
+            var response = await _authService.ResetPassword(request.PasswordResetToken, request.Password);
+            if (!response.Success)
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
+                return BadRequest(response);
             }
+
+            return Ok(response);
         }
     }
 }

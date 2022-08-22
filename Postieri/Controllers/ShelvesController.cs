@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Postieri.Data;
 using Postieri.Models;
 
 namespace Postieri.Controllers
@@ -13,9 +14,9 @@ namespace Postieri.Controllers
     [ApiController]
     public class ShelvesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly DataContext _context;
 
-        public ShelvesController(AppDbContext context)
+        public ShelvesController(DataContext context)
         {
             _context = context;
         }
@@ -87,7 +88,7 @@ namespace Postieri.Controllers
         {
           if (_context.Shelves == null)
           {
-              return Problem("Entity set 'AppDbContext.Shelves'  is null.");
+              return Problem("Entity set 'DataContext.Shelves'  is null.");
           }
             _context.Shelves.Add(shelf);
             await _context.SaveChangesAsync();
