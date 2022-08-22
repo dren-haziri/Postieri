@@ -1,6 +1,6 @@
 ﻿namespace Postieri.DTOs
 {
-    public class VerificationDto
+    public class UserVerificationDto
     {
         public string? VerificationToken { get; set; }
     }

@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Postieri.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Configuration;
+using Postieri.Interfaces;
 
 namespace Postieri.Controllers
 {
@@ -29,16 +30,16 @@ namespace Postieri.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ServiceResponse<int>>> Register(RegisterDto request)
         {
-            var response = await _authService.Register(
-                new User
-                {
-                    Email = request.Email,
-                    Username = request.Username,
-                    CompanyName = request.CompanyName,
-                    RoleName = request.RoleName,
-                    PhoneNumber = request.PhoneNumber,
-                },
-                request.Password);
+            var user = new User
+            {
+                Email = request.Email,
+                Username = request.Username,
+                CompanyName = request.CompanyName,
+                RoleName = request.RoleName,
+                PhoneNumber = request.PhoneNumber,
+            };
+
+            var response = await _authService.Register(user, request.Password);
 
             if (!response.Success)
             {
@@ -61,7 +62,7 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("verify")]
-        public async Task<ActionResult<ServiceResponse<string>>> Verify(VerificationDto request)
+        public async Task<ActionResult<ServiceResponse<string>>> Verify(UserVerificationDto request)
         {
             var response = await _authService.Verify(request.VerificationToken);
             if (!response.Success)
