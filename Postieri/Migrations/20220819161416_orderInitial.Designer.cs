@@ -12,8 +12,8 @@ using Postieri.Data;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220817111450_order")]
-    partial class order
+    [Migration("20220819161416_orderInitial")]
+    partial class orderInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,27 +26,25 @@ namespace Postieri.Migrations
 
             modelBuilder.Entity("Postieri.Models.Order", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CourierId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CourierId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ManagerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("OrderedOn")
                         .HasColumnType("datetime2");
@@ -54,8 +52,8 @@ namespace Postieri.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Sign")
                         .IsRequired()
@@ -65,12 +63,12 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Postieri.Models.Roles", b =>

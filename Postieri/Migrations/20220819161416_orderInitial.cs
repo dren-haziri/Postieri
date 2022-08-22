@@ -5,31 +5,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Postieri.Migrations
 {
-    public partial class order : Migration
+    public partial class orderInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "Orders",
                 columns: table => new
                 {
-                    OrderId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrderedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sign = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CourierId = table.Column<int>(type: "int", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false)
+                    CourierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ManagerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Order", x => x.OrderId);
+                    table.PrimaryKey("PK_Orders", x => x.OrderId);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,7 +49,7 @@ namespace Postieri.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Roles");
