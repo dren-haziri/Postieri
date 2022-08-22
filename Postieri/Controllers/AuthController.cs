@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using Postieri.Models;
 using Postieri.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Configuration;
@@ -28,7 +27,7 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<ServiceResponse<int>>> Register(UserRegister request)
+        public async Task<ActionResult<ServiceResponse<int>>> Register(RegisterDto request)
         {
             var response = await _authService.Register(
                 new User
@@ -50,7 +49,7 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ServiceResponse<string>>> Login(UserLogin request)
+        public async Task<ActionResult<ServiceResponse<string>>> Login(LoginDto request)
         {
             var response = await _authService.Login(request.Email, request.Password);
             if (!response.Success)
@@ -62,7 +61,7 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("verify")]
-        public async Task<ActionResult<ServiceResponse<string>>> Verify(UserVerification request)
+        public async Task<ActionResult<ServiceResponse<string>>> Verify(VerificationDto request)
         {
             var response = await _authService.Verify(request.VerificationToken);
             if (!response.Success)
@@ -74,7 +73,7 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("forgot-password")]
-        public async Task<ActionResult<ServiceResponse<string>>> ForgotPassword(UserForgotPassword request)
+        public async Task<ActionResult<ServiceResponse<string>>> ForgotPassword(ForgotPasswordDto request)
         {
             var response = await _authService.ForgotPassword(request.Email);
             if (!response.Success)
@@ -86,7 +85,7 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("reset-password")]
-        public async Task<ActionResult<ServiceResponse<string>>> ResetPassword(UserResetPassword request)
+        public async Task<ActionResult<ServiceResponse<string>>> ResetPassword(ResetPasswordDto request)
         {
             var response = await _authService.ResetPassword(request.PasswordResetToken, request.Password);
             if (!response.Success)

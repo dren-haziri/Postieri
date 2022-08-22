@@ -13,13 +13,10 @@ namespace Postieri.Services
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
 
-        public AuthService(DataContext context, IConfiguration configuration //,
-            //IHttpContextAccessor httpContextAccessor
-            )
+        public AuthService(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
-            //_httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
@@ -92,7 +89,6 @@ namespace Postieri.Services
             }
             await _context.SaveChangesAsync();
 
-            //return new ServiceResponse<string> { Message = "Verification successful!" };
             return response;
         }
 
@@ -115,7 +111,6 @@ namespace Postieri.Services
             }
             await _context.SaveChangesAsync();
 
-            //return new ServiceResponse<string> { Message = "You may now reset your password." };
             return response;
         }
 
@@ -143,7 +138,6 @@ namespace Postieri.Services
 
             await _context.SaveChangesAsync();
 
-            //return new ServiceResponse<string> { Message = "Password successfully reset." };
             return response;
         }
 

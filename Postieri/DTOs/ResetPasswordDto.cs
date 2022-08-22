@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Postieri.Models
+namespace Postieri.DTOs
 {
-    public class UserResetPassword
+    public class ResetPasswordDto
     {
         [Required]
         public string PasswordResetToken { get; set; } = string.Empty;

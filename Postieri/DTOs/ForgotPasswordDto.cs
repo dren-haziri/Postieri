@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Postieri.Models
+namespace Postieri.DTOs
 {
-    public class UserForgotPassword
+    public class ForgotPasswordDto
     {
         [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
