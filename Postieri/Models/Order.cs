@@ -26,5 +26,6 @@ namespace Postieri.Models
 
         public Guid CourierId {get;set;}//courier
         public Guid ManagerId {get;set;}
+
     }
 }
