@@ -19,6 +19,7 @@ namespace Postieri.Controllers
     public class PdfExportDataController : ControllerBase
     {
         private readonly DataContext dbContext;
+        private string dataDir;
 
         public PdfExportDataController(DataContext dbContext)
         {
@@ -49,21 +50,20 @@ namespace Postieri.Controllers
         [HttpGet]
         public IActionResult exporPdfData()
         {
-            DateTime dateTimeToday = DateTime.Now;
-
-            var dataSet = (from a in dbContext.Orders
-                           where a.Date.Month > 6
+            var performance = (from a in dbContext.Orders
+                           where a.Status == "success" || a.Status == "Succes"
                            orderby a.Date ascending
                            select new Order()
                            {
                                OrderId = a.OrderId,
                                ProductId = a.ProductId,
                                Date = a.Date,
-                               Price = a.Price,
-                               CourierId = a.OrderId
+                               Price = a.Price
                            }).ToList();
 
-            DataTable dataTable = ToDataTable(dataSet);
+            double totalPrice = performance.Sum(item => item.Price);
+
+            DataTable dataTable = ToDataTable(performance);
 
             var document = new Document
             {
@@ -72,13 +72,13 @@ namespace Postieri.Controllers
             var pdfpage = document.Pages.Add();
             Table table = new Table()
             {
-                //ColumnWidths = "8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3%",
                 ColumnWidths = "20% 20% 20% 20% 20%",
                 DefaultCellPadding = new MarginInfo(10, 5, 10, 5),
                 Border = new BorderInfo(BorderSide.All, .5f, Color.Black),
                 DefaultCellBorder = new BorderInfo(BorderSide.All, .2f, Color.Black)
 
             };
+
             table.ImportDataTable(dataTable, true, 0, 0);
             document.Pages[1].Paragraphs.Add(table);
             using (var streamout = new MemoryStream())
