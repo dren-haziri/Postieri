@@ -14,6 +14,7 @@ using Postieri.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Configuration;
 using Postieri.Interfaces;
+using Postieri.Models;
 
 namespace Postieri.Controllers
 {
@@ -98,7 +99,7 @@ namespace Postieri.Controllers
 
             return Ok(response);
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost("Suspened")]
         public async Task<ActionResult<ServiceResponse<string>>> Suspened(string email)
         {
@@ -110,6 +111,7 @@ namespace Postieri.Controllers
 
             return Ok(response);
         }
+        [Authorize(Roles ="admin")]
         [HttpPost("Unsuspened")]
 
         public async Task<ActionResult<ServiceResponse<string>>> Unsuspened(string email)
