@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using Postieri.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Configuration;
 using Postieri.Interfaces;
+using Postieri.Models;
 
 namespace Postieri.Controllers
 {
@@ -37,6 +39,7 @@ namespace Postieri.Controllers
                 CompanyName = request.CompanyName,
                 RoleName = request.RoleName,
                 PhoneNumber = request.PhoneNumber,
+
             };
 
             var response = await _authService.Register(user, request.Password);
@@ -89,6 +92,31 @@ namespace Postieri.Controllers
         public async Task<ActionResult<ServiceResponse<string>>> ResetPassword(ResetPasswordDto request)
         {
             var response = await _authService.ResetPassword(request.PasswordResetToken, request.Password);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+        [Authorize(Roles = "admin")]
+        [HttpPost("Suspened")]
+        public async Task<ActionResult<ServiceResponse<string>>> Suspened(string email)
+        {
+            var response = await _authService.Suspend(email);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+        [Authorize(Roles ="admin")]
+        [HttpPost("Unsuspened")]
+
+        public async Task<ActionResult<ServiceResponse<string>>> Unsuspened(string email)
+        {
+            var response = await _authService.Unsuspend(email);
             if (!response.Success)
             {
                 return BadRequest(response);

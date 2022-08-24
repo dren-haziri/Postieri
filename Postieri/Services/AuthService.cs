@@ -62,6 +62,11 @@ namespace Postieri.Services
                 response.Success = false;
                 response.Message = "User is not verified.";
             }
+            else if (user.IsSuspended)
+            {
+                response.Success = false;
+                response.Message = "User is suspended.";
+            }
             else
             {
                 response.Data = user.VerificationToken;
@@ -148,12 +153,10 @@ namespace Postieri.Services
 
         public async Task<bool> UserExists(string email)
         {
-            if (await _context.Users.AnyAsync(user => user.Email.ToLower()
-                 .Equals(email.ToLower())))
-            {
-                return true;
-            }
-            return false;
+            
+                return await _context.Users.AnyAsync(user => user.Email.ToLower()
+                 .Equals(email.ToLower()));
+            
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
@@ -221,5 +224,48 @@ namespace Postieri.Services
 
             return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." };
         }
+
+        public async Task<ServiceResponse<string>> Suspend(string email)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+            user.IsSuspended = true;
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<string>
+            {
+                Success = true,
+                Message = "User was suspended"
+            };
+        }
+
+        public async Task<ServiceResponse<string>> Unsuspend(string email)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+            user.IsSuspended = false;
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<string>
+            {
+                Success = true,
+                Message = "User was unsuspended"
+            };
+        }
+
     }
 }
