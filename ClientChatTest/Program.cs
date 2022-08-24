@@ -9,7 +9,7 @@ Console.ReadLine();
 
 using(ClientWebSocket client = new ClientWebSocket())
 {
-    Uri serviceUri = new Uri("ws://localhost:5134/send");
+    Uri serviceUri = new Uri("ws://localhost:5134/ws");
     var cTs = new CancellationTokenSource();
     cTs.CancelAfter(TimeSpan.FromSeconds(120));
     try
