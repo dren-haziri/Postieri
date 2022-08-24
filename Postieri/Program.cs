@@ -9,6 +9,9 @@ using Microsoft.OpenApi.Models;
 using MimeKit;
 using NuGet.Common;
 using Swashbuckle.AspNetCore.Filters;
+using System.Net.WebSockets;
+using System.Net;
+
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -65,6 +68,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseRouting();
+app.UseWebSockets();
 
 app.MapControllers();
 
