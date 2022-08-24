@@ -52,9 +52,16 @@ namespace Postieri.Controllers
             DateTime dateTimeToday = DateTime.Now;
 
             var dataSet = (from a in dbContext.Orders
-                           where a.Date.Month > dateTimeToday.Month
+                           where a.Date.Month > 6
                            orderby a.Date ascending
-                           select a).ToList();
+                           select new Order()
+                           {
+                               OrderId = a.OrderId,
+                               ProductId = a.ProductId,
+                               Date = a.Date,
+                               Price = a.Price,
+                               CourierId = a.OrderId
+                           }).ToList();
 
             DataTable dataTable = ToDataTable(dataSet);
 
@@ -65,7 +72,8 @@ namespace Postieri.Controllers
             var pdfpage = document.Pages.Add();
             Table table = new Table()
             {
-                ColumnWidths = "8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3%",
+                //ColumnWidths = "8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3% 8.3%",
+                ColumnWidths = "20% 20% 20% 20% 20%",
                 DefaultCellPadding = new MarginInfo(10, 5, 10, 5),
                 Border = new BorderInfo(BorderSide.All, .5f, Color.Black),
                 DefaultCellBorder = new BorderInfo(BorderSide.All, .2f, Color.Black)
