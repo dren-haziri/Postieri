@@ -12,11 +12,11 @@ namespace Postieri
         public string Username { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        [EmailAddress]
+     
         public string Email { get; set; }
         public string CompanyName { get; set; }
         public string RoleName { get; set; }
-        public bool IsLocked { get; set; }
+        public bool IsSuspened { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime RegisterDate { get; set; } = DateTime.Now;
         public bool IsActive { get; set; } = true;

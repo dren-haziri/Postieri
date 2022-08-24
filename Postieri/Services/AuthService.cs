@@ -57,10 +57,15 @@ namespace Postieri.Services
                 response.Success = false;
                 response.Message = "Wrong password.";
             }
-            else if (user.VerifiedAt == null)
+            //else if (user.VerifiedAt == null)
+            //{
+            //    response.Success = false;
+            //    response.Message = "User is not verified.";
+            //}
+            else if (user.IsSuspened)
             {
                 response.Success = false;
-                response.Message = "User is not verified.";
+                response.Message = "User is suspended.";
             }
             else
             {
@@ -221,5 +226,48 @@ namespace Postieri.Services
 
             return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." };
         }
+
+        public async Task<ServiceResponse<string>> Suspened(string email)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+            user.IsSuspened = true;
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<string>
+            {
+                Success = true,
+                Message = "User was suspended"
+            };
+        }
+
+        public async Task<ServiceResponse<string>> Unsuspened(string email)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+            user.IsSuspened = false;
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<string>
+            {
+                Success = true,
+                Message = "User was unsuspended"
+            };
+        }
+
     }
 }

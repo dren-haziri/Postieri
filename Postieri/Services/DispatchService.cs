@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Postieri.Interfaces; 
-using System.Runtime.InteropServices;
-using Postieri.Models;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
+//using Postieri.Interfaces; 
+//using System.Runtime.InteropServices;
+//using Postieri.Models;
 
-namespace Postieri.Services
-{
-    public class DispatchService : IDispatchService
-    {
+//namespace Postieri.Services
+//{
+//    public class DispatchService : IDispatchService
+//    {
 
        
 //       public string TransferPackage(Guid managerId, Guid courierId, Guid productId)

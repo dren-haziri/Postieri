@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,6 @@ namespace Postieri.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-
         private readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)
@@ -38,6 +38,7 @@ namespace Postieri.Controllers
                 CompanyName = request.CompanyName,
                 RoleName = request.RoleName,
                 PhoneNumber = request.PhoneNumber,
+
             };
 
             var response = await _authService.Register(user, request.Password);
@@ -52,28 +53,15 @@ namespace Postieri.Controllers
 
         [HttpPost("login")]
         public async Task<ActionResult<ServiceResponse<string>>> Login(LoginDto request)
-
         {
             var response = await _authService.Login(request.Email, request.Password);
             if (!response.Success)
             {
-
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.RoleName)
-            };
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
                 return BadRequest(response);
             }
 
-
             return Ok(response);
         }
-
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         [HttpPost("verify")]
         public async Task<ActionResult<ServiceResponse<string>>> Verify(UserVerificationDto request)
@@ -84,71 +72,20 @@ namespace Postieri.Controllers
                 return BadRequest(response);
             }
 
-
             return Ok(response);
         }
 
         [HttpPost("forgot-password")]
         public async Task<ActionResult<ServiceResponse<string>>> ForgotPassword(ForgotPasswordDto request)
         {
-
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-
             var response = await _authService.ForgotPassword(request.Email);
             if (!response.Success)
             {
                 return BadRequest(response);
-
             }
 
             return Ok(response);
         }
-
-
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
-        }
-
-        //private bool LockUser(string email)
-        //{
-        //    email = "string";
-        //    user.Email = email;
-        //    user.IsLocked = true;
-        //    if (user.IsLocked)
-        //    {
-        //        return true ;
-        //    }
-        //    return false;
-
-        //}
-        [HttpPost("LockUser")]
-        public void LockUser(string email)
-        {
-            user.IsLocked = true;
-        }
-
-
-        [HttpPost("UnLockUser")]
-        public void UnLockUser(string email)
-        {
-            user.IsLocked = false;
-        }
-
-        private bool isUserLocked(string email)
-        {
-            if (user.IsLocked)
-            {
-                return true;
-            }
-            return false;
 
         [HttpPost("reset-password")]
         public async Task<ActionResult<ServiceResponse<string>>> ResetPassword(ResetPasswordDto request)
@@ -160,8 +97,30 @@ namespace Postieri.Controllers
             }
 
             return Ok(response);
-
         }
 
+        [HttpPost("Suspened")]
+        public async Task<ActionResult<ServiceResponse<string>>> Suspened(string email)
+        {
+            var response = await _authService.Suspened(email);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+        [HttpPost("Unsuspened")]
+
+        public async Task<ActionResult<ServiceResponse<string>>> Unsuspened(string email)
+        {
+            var response = await _authService.Unsuspened(email);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
     }
 }
