@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
 using Postieri.Models;
-using Postieri.Models;
 
 namespace Postieri.Controllers
 {
@@ -89,7 +88,7 @@ namespace Postieri.Controllers
         {
           if (_context.Warehouse == null)
           {
-              return Problem("Entity set 'AppDbContext.Warehouse'  is null.");
+              return Problem("Entity set 'DataContext.Warehouse'  is null.");
           }
             _context.Warehouse.Add(warehouse);
             await _context.SaveChangesAsync();

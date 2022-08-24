@@ -88,7 +88,7 @@ namespace Postieri.Controllers
         {
           if (_context.Shelves == null)
           {
-              return Problem("Entity set 'AppDbContext.Shelves'  is null.");
+              return Problem("Entity set 'DataContext.Shelves'  is null.");
           }
             _context.Shelves.Add(shelf);
             await _context.SaveChangesAsync();

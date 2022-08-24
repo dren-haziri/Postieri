@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Postieri.Data;
 
@@ -11,9 +12,10 @@ using Postieri.Data;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220822204213_ExpirationDateRenamed")]
+    partial class ExpirationDateRenamed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,13 +162,11 @@ namespace Postieri.Migrations
 
             modelBuilder.Entity("Postieri.User", b =>
                 {
-
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
-
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
@@ -177,25 +177,17 @@ namespace Postieri.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ExpirationDate")
-
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-
-                    b.Property<bool>("IsLocked")
-                        .HasColumnType("bit");
-
-
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-
                     b.Property<string>("PasswordResetToken")
                         .HasColumnType("nvarchar(max)");
-
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
@@ -208,15 +200,12 @@ namespace Postieri.Migrations
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
-
                     b.Property<DateTime?>("ResetTokenExpires")
                         .HasColumnType("datetime2");
-
 
                     b.Property<string>("RoleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -228,12 +217,10 @@ namespace Postieri.Migrations
                     b.Property<DateTime?>("VerifiedAt")
                         .HasColumnType("datetime2");
 
-
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
-
 
             modelBuilder.Entity("Postieri.Models.Product", b =>
                 {
@@ -241,7 +228,6 @@ namespace Postieri.Migrations
                         .WithMany("Products")
                         .HasForeignKey("ShelfId");
                 });
-
 
             modelBuilder.Entity("Postieri.Models.Shelf", b =>
                 {
@@ -253,7 +239,6 @@ namespace Postieri.Migrations
 
                     b.Navigation("Warehouse");
                 });
-
 
             modelBuilder.Entity("Postieri.Models.Shelf", b =>
                 {
