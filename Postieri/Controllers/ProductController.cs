@@ -13,23 +13,29 @@ namespace Postieri.Controllers
 
         public string CalculateSize(double length, double width, double height)
         {
-            if (height < 353 && width < 250 && height < 20.5)
+            var SmallPackageLength = 353;
+            var SmallPackageWidth = 250;
+            var SmallPackageHeight = 20.5;   
+            var MediumPackageLength = 450;
+            var MediumPackageWidth = 350;
+            var MediumPackageHeight = 160;
+            var LargePackageLength = 610;
+            var LargePackageWidth = 460;
+            var LargePackageHeight = 460;
+
+            if (height < SmallPackageHeight && width < SmallPackageWidth && length <SmallPackageLength )
             {
                 return ("this is a small package");
             }
-            else if (height > 353 && height < 450 && width > 250 && width < 350 && height > 20.5 && height < 160)
+            else if (height>SmallPackageHeight && height<MediumPackageHeight && width > SmallPackageWidth && width < MediumPackageWidth && length>SmallPackageLength && length<MediumPackageLength)
             {
                 return ("this is a medium package");
             }
-            else if (height > 450 && height < 610 && width > 350 && width < 460 && height > 160 && height < 460)
+            else if (length > MediumPackageLength && length < LargePackageLength && width > MediumPackageWidth && width < LargePackageWidth && height > MediumPackageHeight && height < LargePackageHeight)
             {
                 return ("this is a large package");
             }
-            else
-            {
                 return ("we do not ship this kind of package, please contact our staff for further details");
-            }
-
         }
     }
 }
