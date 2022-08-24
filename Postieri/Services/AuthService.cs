@@ -153,12 +153,10 @@ namespace Postieri.Services
 
         public async Task<bool> UserExists(string email)
         {
-            if (await _context.Users.AnyAsync(user => user.Email.ToLower()
-                 .Equals(email.ToLower())))
-            {
-                return true;
-            }
-            return false;
+            
+                return await _context.Users.AnyAsync(user => user.Email.ToLower()
+                 .Equals(email.ToLower()));
+            
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
