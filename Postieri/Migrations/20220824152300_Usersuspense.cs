@@ -14,9 +14,9 @@ namespace Postieri.Migrations
         
 
             migrationBuilder.RenameColumn(
-                name: "ExpDate",
+                name: "IsSuspened",
                 table: "Users",
-                newName: "ExpirationDate");
+                newName: "IsSuspended");
 
             migrationBuilder.AddColumn<string>(
                     name: "PasswordResetToken",

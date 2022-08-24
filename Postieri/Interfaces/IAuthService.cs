@@ -10,8 +10,8 @@ namespace Postieri.Interfaces
         Task<ServiceResponse<string>> ForgotPassword(string email);
         Task<ServiceResponse<string>> ResetPassword(string passwordresettoken, string password);
         Task<bool> UserExists(string email);
-        Task<ServiceResponse<string>> Suspened(string email);
-        Task<ServiceResponse<string>> Unsuspened(string email);
+        Task<ServiceResponse<string>> Suspend(string email);
+        Task<ServiceResponse<string>> Unsuspend(string email);
 
     }
 }

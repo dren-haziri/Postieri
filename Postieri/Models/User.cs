@@ -16,7 +16,7 @@ namespace Postieri
         public string Email { get; set; }
         public string CompanyName { get; set; }
         public string RoleName { get; set; }
-        public bool IsSuspened { get; set; }
+        public bool IsSuspended { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime RegisterDate { get; set; } = DateTime.Now;
         public bool IsActive { get; set; } = true;

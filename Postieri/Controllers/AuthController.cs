@@ -103,7 +103,7 @@ namespace Postieri.Controllers
         [HttpPost("Suspened")]
         public async Task<ActionResult<ServiceResponse<string>>> Suspened(string email)
         {
-            var response = await _authService.Suspened(email);
+            var response = await _authService.Suspend(email);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -116,7 +116,7 @@ namespace Postieri.Controllers
 
         public async Task<ActionResult<ServiceResponse<string>>> Unsuspened(string email)
         {
-            var response = await _authService.Unsuspened(email);
+            var response = await _authService.Unsuspend(email);
             if (!response.Success)
             {
                 return BadRequest(response);
