@@ -14,7 +14,7 @@ namespace Postieri.Controllers
         {
             _context = context;
         }
-
+        [HttpGet]
         public string CalculateSize(double length, double width, double height)
         {
             //Small Package Width
@@ -27,7 +27,7 @@ namespace Postieri.Controllers
                            where d.name == "SmallPackage"
                            select d.height;
             var SmallPackageHeight = SPHeight.FirstOrDefault();
-            //Small Package width
+            //Small Package length
             var SPLength = from d in _context.Dimensions
                            where d.name == "SmallPackage"
                            select d.length;
