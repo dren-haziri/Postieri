@@ -2,7 +2,6 @@ global using Postieri.Interfaces;
 global using Postieri.DTOs;
 using Postieri.Data;
 using Microsoft.EntityFrameworkCore;
-
 using Postieri.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +11,7 @@ using NuGet.Common;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net.WebSockets;
 using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 
 
 
@@ -40,7 +40,6 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -56,6 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false
         };
     });
+builder.Services.AddSingleton<WebSocketServerConnectionManager>();
 
 var app = builder.Build();
 
@@ -74,7 +74,6 @@ app.UseAuthorization();
 
 app.UseRouting();
 app.UseWebSockets();
-
 app.MapControllers();
 
 app.Run();
