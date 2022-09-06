@@ -39,7 +39,7 @@ namespace Postieri.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<int> { Data = user.UserId, Message = "Registration successful!" };
+            return new ServiceResponse<int> { Data = user.UserId, Message = "Registration successful!" }.ToJson();
         }
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
@@ -73,7 +73,7 @@ namespace Postieri.Services
                 response.Message = "Login successful!";
             }
 
-            return response;
+            return response.ToJson();
         }
 
         public async Task<ServiceResponse<string>> Verify(string verificationtoken)
@@ -94,7 +94,7 @@ namespace Postieri.Services
             }
             await _context.SaveChangesAsync();
 
-            return response;
+            return response.ToJson();
         }
 
         public async Task<ServiceResponse<string>> ForgotPassword(string email)
@@ -116,7 +116,7 @@ namespace Postieri.Services
             }
             await _context.SaveChangesAsync();
 
-            return response;
+            return response.ToJson();
         }
 
         public async Task<ServiceResponse<string>> ResetPassword(string passwordresettoken, string password)
@@ -143,7 +143,7 @@ namespace Postieri.Services
 
             await _context.SaveChangesAsync();
 
-            return response;
+            return response.ToJson();
         }
 
         private string CreatePasswordResetToken()
@@ -222,7 +222,7 @@ namespace Postieri.Services
 
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." };
+            return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." }.ToJson();
         }
 
         public async Task<ServiceResponse<string>> Suspend(string email)
