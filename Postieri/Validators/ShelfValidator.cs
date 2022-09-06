@@ -7,8 +7,9 @@ namespace Postieri.Validators
     {
         public ShelfValidator()
         {
-              RuleFor(x => x.MaxProducts
-            ).NotEmpty().NotNull().WithMessage("Number");
+            RuleFor(x => x.MaxProducts).NotEmpty().NotNull();
+            RuleFor(x => x.BinLetter).NotEmpty().NotNull();
+            RuleFor(x => x.WarehouseId).NotEmpty().NotNull();
         }
     }
 }
