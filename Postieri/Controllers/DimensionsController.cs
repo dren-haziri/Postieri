@@ -10,58 +10,60 @@ using Postieri.Models;
 
 namespace Postieri.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
-    public class WarehousesController : ControllerBase
+    public class DimensionsController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public WarehousesController(DataContext context)
+        public DimensionsController(DataContext context)
         {
             _context = context;
         }
-       
 
-        // GET: api/Warehouses
+
+
+        // GET: api/Dimensions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Warehouse>>> GetWarehouse()
+        public async Task<ActionResult<IEnumerable<Dimension>>> GetDimensions()
         {
-          if (_context.Warehouse == null)
+          if (_context.Dimensions == null)
           {
               return NotFound();
           }
-            return await _context.Warehouse.ToListAsync();
+            return await _context.Dimensions.ToListAsync();
         }
 
-        // GET: api/Warehouses/5
+        // GET: api/Dimensions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Warehouse>> GetWarehouse(int id)
+        public async Task<ActionResult<Dimension>> GetDimension(Guid id)
         {
-          if (_context.Warehouse == null)
+          if (_context.Dimensions == null)
           {
               return NotFound();
           }
-            var warehouse = await _context.Warehouse.FindAsync(id);
+            var dimension = await _context.Dimensions.FindAsync(id);
 
-            if (warehouse == null)
+            if (dimension == null)
             {
                 return NotFound();
             }
 
-            return warehouse;
+            return dimension;
         }
 
-        // PUT: api/Warehouses/5
+        // PUT: api/Dimensions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWarehouse(int id, Warehouse warehouse)
+        public async Task<IActionResult> PutDimension(Guid id, Dimension dimension)
         {
-            if (id != warehouse.WarehouseId)
+            if (id != dimension.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(warehouse).State = EntityState.Modified;
+            _context.Entry(dimension).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +71,7 @@ namespace Postieri.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!WarehouseExists(id))
+                if (!DimensionExists(id))
                 {
                     return NotFound();
                 }
@@ -82,44 +84,46 @@ namespace Postieri.Controllers
             return NoContent();
         }
 
-        // POST: api/Warehouses
+        // POST: api/Dimensions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Warehouse>> PostWarehouse(Warehouse warehouse)
+        public async Task<ActionResult<Dimension>> PostDimension(Dimension dimension)
         {
-          if (_context.Warehouse == null)
+          if (_context.Dimensions == null)
           {
-              return Problem("Entity set 'DataContext.Warehouse'  is null.");
+              return Problem("Entity set 'DataContext.Dimensions'  is null.");
           }
-            _context.Warehouse.Add(warehouse);
+            _context.Dimensions.Add(dimension);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWarehouse", new { id = warehouse.WarehouseId }, warehouse);
+            return CreatedAtAction("GetDimension", new { id = dimension.Id }, dimension);
         }
 
-        // DELETE: api/Warehouses/5
+        // DELETE: api/Dimensions/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWarehouse(int id)
+        public async Task<IActionResult> DeleteDimension(Guid id)
         {
-            if (_context.Warehouse == null)
+            if (_context.Dimensions == null)
             {
                 return NotFound();
             }
-            var warehouse = await _context.Warehouse.FindAsync(id);
-            if (warehouse == null)
+            var dimension = await _context.Dimensions.FindAsync(id);
+            if (dimension == null)
             {
                 return NotFound();
             }
 
-            _context.Warehouse.Remove(warehouse);
+            _context.Dimensions.Remove(dimension);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool WarehouseExists(int id)
+        private bool DimensionExists(Guid id)
         {
-            return (_context.Warehouse?.Any(e => e.WarehouseId == id)).GetValueOrDefault();
+            return (_context.Dimensions?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+
     }
 }
