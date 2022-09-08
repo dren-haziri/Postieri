@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Postieri.Data;
 
@@ -11,9 +12,10 @@ using Postieri.Data;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220822204213_ExpirationDateRenamed")]
+    partial class ExpirationDateRenamed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,6 +69,24 @@ namespace Postieri.Migrations
                     b.HasKey("OrderId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Postieri.Models.Product", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
+
+                    b.Property<int?>("ShelfId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("ShelfId");
+
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Postieri.Models.Roles", b =>
@@ -162,9 +182,6 @@ namespace Postieri.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSuspened")
-                        .HasColumnType("bit");
-
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
@@ -205,6 +222,13 @@ namespace Postieri.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Postieri.Models.Product", b =>
+                {
+                    b.HasOne("Postieri.Models.Shelf", null)
+                        .WithMany("Products")
+                        .HasForeignKey("ShelfId");
+                });
+
             modelBuilder.Entity("Postieri.Models.Shelf", b =>
                 {
                     b.HasOne("Postieri.Models.Warehouse", "Warehouse")
@@ -214,6 +238,11 @@ namespace Postieri.Migrations
                         .IsRequired();
 
                     b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("Postieri.Models.Shelf", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Postieri.Models.Warehouse", b =>

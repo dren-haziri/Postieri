@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Postieri.Data;
 using Postieri.Models;
 
 namespace Postieri.Controllers
@@ -13,9 +14,9 @@ namespace Postieri.Controllers
     [ApiController]
     public class WarehousesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly DataContext _context;
 
-        public WarehousesController(AppDbContext context)
+        public WarehousesController(DataContext context)
         {
             _context = context;
         }
@@ -88,7 +89,7 @@ namespace Postieri.Controllers
         {
           if (_context.Warehouse == null)
           {
-              return Problem("Entity set 'AppDbContext.Warehouse'  is null.");
+              return Problem("Entity set 'DataContext.Warehouse'  is null.");
           }
             _context.Warehouse.Add(warehouse);
             await _context.SaveChangesAsync();
