@@ -23,7 +23,7 @@ namespace Postieri.Controllers
         [HttpGet]
         public IActionResult generateExcel()
         {
-            var objList = (from a in dbContext.Orders
+            var objectList = (from a in dbContext.Orders
                                orderby a.Date ascending
                                select new Order()
                                {
@@ -41,7 +41,7 @@ namespace Postieri.Controllers
                                    ManagerId = a.ManagerId
                                }).ToList();
 
-            XLWorkbook workbook = _exportDataExcelService.GenerateExcelForOrder(objList);
+            XLWorkbook workbook = _exportDataExcelService.GenerateExcelForOrder(objectList);
 
             using (var stream = new MemoryStream())
             {

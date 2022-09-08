@@ -5,7 +5,6 @@ namespace Postieri.Interfaces
 {
     public interface IExportDataExcelService
     {
-        XLWorkbook GenerateExcelForOrder<T>(IList<T> objList) where T : Order;
-        XLWorkbook GenerateExcelForWarehouse<T>(IList<T> objList) where T : Warehouse;
+        XLWorkbook GenerateExcelForOrder<T>(IList<T> objectList) where T : Order;
     }
 }
