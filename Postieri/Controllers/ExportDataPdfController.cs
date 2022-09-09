@@ -23,7 +23,6 @@ namespace Postieri.Controllers
         public IActionResult exporPdfData()
         {
             var performance = (from a in dbContext.Orders
-                               where a.Status == "success" || a.Status == "Succes"
                                orderby a.Date ascending
                                select new Order()
                                {

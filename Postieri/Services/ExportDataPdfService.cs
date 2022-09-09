@@ -25,17 +25,17 @@ namespace Postieri.Services
             XGraphics graphics = XGraphics.FromPdfPage(page);
 
             graphics.DrawString("Performance", new XFont("Arial", 30, XFontStyle.Bold), XBrushes.Black, new XPoint(200, 70));
-            graphics.DrawLine(new XPen(XColor.FromArgb(50, 30, 200)), new XPoint(100, 75), new XPoint(500, 75));
+            graphics.DrawLine(new XPen(XColor.FromArgb(50, 30, 200)), new XPoint(100, 100), new XPoint(500, 100));
 
-            graphics.DrawString(propertyNames[0], new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(50, 200));
-            graphics.DrawString(propertyNames[1], new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(220, 200));
-            graphics.DrawString(propertyNames[2], new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(400, 200));
-            graphics.DrawString(propertyNames[4], new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(500, 200));
+            graphics.DrawString(propertyNames[0], new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(50, 280));
+            graphics.DrawString(propertyNames[1], new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(220, 280));
+            graphics.DrawString(propertyNames[2], new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(400, 280));
+            graphics.DrawString(propertyNames[4], new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(500, 280));
 
-            graphics.DrawLine(new XPen(XColor.FromArgb(50, 30, 200)), new XPoint(50, 210), new XPoint(550, 210));
+            graphics.DrawLine(new XPen(XColor.FromArgb(50, 30, 200)), new XPoint(50, 290), new XPoint(550, 290));
 
-            int currentYposition_values = 223;
-            int currentYposition_lines = 230;
+            int currentYposition_values = 303;
+            int currentYposition_lines = 310;
 
             if (objList.Count <= 20)
             {
@@ -48,7 +48,7 @@ namespace Postieri.Services
 
                     graphics.DrawLine(new XPen(XColor.FromArgb(50, 30, 200)), new XPoint(50, currentYposition_lines), new XPoint(550, currentYposition_lines));
 
-                    currentYposition_lines += 20;
+                    currentYposition_values += 20;
                     currentYposition_lines += 20;
                 }
             }
@@ -56,13 +56,15 @@ namespace Postieri.Services
             {
                 for (int i = 0; i < 15; i++)
                 {
-                    graphics.DrawString(objList[i].OrderId.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
-                    graphics.DrawString(objList[i].ProductId.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
-                    graphics.DrawString(objList[i].Date.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
-                    graphics.DrawString(objList[i].Price.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
+                    graphics.DrawString(objList[i].OrderId.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(50, currentYposition_values));
+                    graphics.DrawString(objList[i].ProductId.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(220, currentYposition_values));
+                    graphics.DrawString(objList[i].Date.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(400, currentYposition_values));
+                    graphics.DrawString(objList[i].Price.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(500, currentYposition_values));
+
+                    graphics.DrawLine(new XPen(XColor.FromArgb(50, 30, 200)), new XPoint(50, currentYposition_lines), new XPoint(550, currentYposition_lines));
 
 
-                    currentYposition_lines += 20;
+                    currentYposition_values += 20;
                     currentYposition_lines += 20;
 
                     objList.Remove(objList[i]);
@@ -90,7 +92,7 @@ namespace Postieri.Services
                     graphics.DrawLine(new XPen(XColor.FromArgb(50, 30, 200)), new XPoint(50, currentYposition_lines), new XPoint(550, currentYposition_lines));
 
 
-                    currentYposition_lines += 20;
+                    currentYposition_values += 20;
                     currentYposition_lines += 20;
                 }
             }
