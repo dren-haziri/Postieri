@@ -30,6 +30,12 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<ValidationFilter>();
 });
+builder.Services.AddFluentValidation(fv =>
+{
+   
+    fv.RegisterValidatorsFromAssemblyContaining<Program>();
+    NewMethod(fv);
+});
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -92,3 +98,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void NewMethod(FluentValidationMvcConfiguration fv)
+{
+    fv.ImplicitlyValidateChildProperties = true;
+}
