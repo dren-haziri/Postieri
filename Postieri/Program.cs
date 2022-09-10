@@ -18,6 +18,12 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.Web.Http.Validation.Providers;
 using Postieri.Models;
+using System.Net.WebSockets;
+using System.Net;
+using System.Text;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -60,6 +66,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IExportDataPdfService, ExportDataPdfService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -89,6 +96,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseRouting();
+app.UseWebSockets();
+
 app.MapControllers();
 
 app.Run();
+ 
