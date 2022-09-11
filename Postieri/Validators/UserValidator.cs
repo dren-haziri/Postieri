@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Postieri.Validators
 {
-    public class UserValidator:AbstractValidator<RegisterDto>
+    public class UserValidatorRegister : AbstractValidator<RegisterDto>
     {
-        public UserValidator()
+        public UserValidatorRegister()
         {
             RuleFor(user => user.Username).NotEmpty().NotNull().MinimumLength(2).WithMessage("{PropertyName} must be a string with a minimum length of 2.").MaximumLength(15).WithMessage("{PropertyName} must be a string with a maximum length of 15.");
             RuleFor(user => user.Password).Password();
@@ -26,6 +26,34 @@ namespace Postieri.Validators
             RuleFor(user => user.Password).NotEmpty().NotNull().WithMessage("{PropertyName} is required!");
             RuleFor(user => user.Email).EmailAddress().NotEmpty().NotNull();
           
+        }
+    }
+
+    public class EmailDtoValidator : AbstractValidator<EmailDto>
+    {
+        public EmailDtoValidator()
+        {
+            RuleFor(x => x.Body).NotEmpty().NotNull();
+            RuleFor(x => x.From).NotEmpty().NotNull();
+            RuleFor(x =>  x.Subject).NotEmpty().NotNull().MinimumLength(10);
+        }
+    }
+
+    public class ResetPasswordValidator : AbstractValidator<ResetPasswordDto>
+    {
+        public ResetPasswordValidator()
+        {
+            RuleFor(x => x.Password).Password();
+            RuleFor(x => x.ConfirmPassword).Matches(x => x.Password);
+            RuleFor(x => x.PasswordResetToken).NotEmpty().NotNull();
+        }
+    }
+
+    public class ForgotPasswordValidation : AbstractValidator<ForgotPasswordDto>
+    {
+        public ForgotPasswordValidation()
+        {
+            RuleFor(x => x.Email).EmailAddress().NotEmpty().NotNull();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Postieri.DTOs
         public string Username { get; set; }
         
         public string Password { get; set; }
-       // [Compare("Password", ErrorMessage = "The passwords do not match.")]
+      
         public string ConfirmPassword { get; set; }
         
         public string CompanyName { get; set; }
