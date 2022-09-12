@@ -4,8 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Postieri", "Postieri\Postieri.csproj", "{A50C536A-D02D-45F4-BC3C-901325E99163}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientChatTest", "ClientChatTest\ClientChatTest.csproj", "{3CC431D5-AF43-440E-9953-5B19D3498B99}"
+//EndProject
+//Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientChatTest", "ClientChatTest\ClientChatTest.csproj", "{3CC431D5-AF43-440E-9953-5B19D3498B99}"
+
+
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

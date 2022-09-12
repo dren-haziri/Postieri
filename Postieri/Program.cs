@@ -12,6 +12,8 @@ using NuGet.Common;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net.WebSockets;
 using System.Net;
+using System.Text;
+
 
 
 
@@ -44,6 +46,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IExportDataExcelService, ExportDataExcelService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IExportDataPdfService, ExportDataPdfService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -79,3 +82,4 @@ app.UseWebSockets();
 app.MapControllers();
 
 app.Run();
+ 
