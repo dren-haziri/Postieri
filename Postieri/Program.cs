@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Models;
 using MimeKit;
 using NuGet.Common;
 using Swashbuckle.AspNetCore.Filters;
-
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -18,7 +18,8 @@ string connString = builder.Configuration.GetConnectionString("DefaultConnection
 // Add services to the container.
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

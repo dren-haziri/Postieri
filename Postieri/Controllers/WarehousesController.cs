@@ -42,14 +42,24 @@ namespace Postieri.Controllers
             {
                 return NotFound();
             }
-            var warehouse = await _context.Warehouse.FindAsync(id);
 
-            if (warehouse == null)
+            var _warehouse = _context.Warehouse.Where(n => n.WarehouseId == id).Select(warehouse => new Warehouse()
+            {
+                WarehouseId = warehouse.WarehouseId,
+                Location = warehouse.Location,
+                Area = warehouse.Area,
+                Name = warehouse.Name,
+                NumOfShelves = warehouse.NumOfShelves,
+                Shelves = warehouse.Shelves
+             
+            }).FirstOrDefault();
+
+            if (_warehouse == null)
             {
                 return NotFound();
             }
 
-            return warehouse;
+            return _warehouse;
         }
 
         // PUT: api/Warehouses/5
@@ -57,6 +67,7 @@ namespace Postieri.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWarehouse(int id, WarehouseVM warehouse)
         {
+
             var _warehouse = _context.Warehouse.FirstOrDefault(n => n.WarehouseId == id);
             if (_warehouse != null)
             {
