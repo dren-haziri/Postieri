@@ -49,7 +49,7 @@ namespace Postieri.Controllers
            
         }
         [HttpDelete]
-        public async Task<ActionResult<List<Roles>>> Delete(int id)
+        public async Task<ActionResult<List<Roles>>> Delete(Guid id)
         {
             var role = await _context.Roles.FindAsync(id);
             if (role == null)
