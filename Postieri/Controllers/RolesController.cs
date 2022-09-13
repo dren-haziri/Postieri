@@ -13,10 +13,11 @@ namespace Postieri.Controllers
 
       
         private readonly DataContext _context;
-        public RolesController(DataContext context)
+        private readonly IRolesService _rolesService;
+        public RolesController(DataContext context, IRolesService rolesService)
         {
             _context = context;
-
+            _rolesService = rolesService;
         }
         [HttpGet]
         public async Task<ActionResult<List<Role>>> Get()
@@ -27,9 +28,7 @@ namespace Postieri.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Role>>> AddRole(Role role)
         {
-            //allRoles.Add(role);
-            _context.Roles.Add(role);
-            await _context.SaveChangesAsync();
+            _rolesService.AddRole(role);
             return Ok(await _context.Roles.ToListAsync());
 
         }
@@ -37,26 +36,14 @@ namespace Postieri.Controllers
         [HttpPut]
         public async Task<ActionResult<List<Role>>> UpdateRole(Role request)
         {
-            //var role = allRoles.Find(r => r.Id == request.Id);
-            var role =await  _context.Roles.FindAsync(request.Id);
-            if (role == null)
-                return BadRequest("role not found");
-            role.Name = request.Name;
-            role.Description = request.Description;
-
-            await _context.SaveChangesAsync();
+            _rolesService.UpdateRole(request);
             return Ok(await _context.Roles.ToListAsync());
            
         }
         [HttpDelete]
         public async Task<ActionResult<List<Role>>> Delete(Guid id)
         {
-            var role = await _context.Roles.FindAsync(id);
-            if (role == null)
-                return BadRequest("role not found");
-
-            _context.Roles.Remove(role);
-            await _context.SaveChangesAsync();
+            _rolesService.DeleteRole(id);
             return Ok(await _context.Roles.ToListAsync());
         }
     }
