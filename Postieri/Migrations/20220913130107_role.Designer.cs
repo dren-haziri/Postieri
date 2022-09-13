@@ -12,8 +12,8 @@ using Postieri.Data;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220824152300_Usersuspense")]
-    partial class Usersuspense
+    [Migration("20220913130107_role")]
+    partial class role
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,33 @@ namespace Postieri.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Postieri.Models.Dimension", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("height")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("inUse")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("length")
+                        .HasColumnType("float");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("width")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Dimensions");
+                });
 
             modelBuilder.Entity("Postieri.Models.Order", b =>
                 {
@@ -73,11 +100,9 @@ namespace Postieri.Migrations
 
             modelBuilder.Entity("Postieri.Models.Roles", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -164,7 +189,7 @@ namespace Postieri.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSuspened")
+                    b.Property<bool>("IsSuspended")
                         .HasColumnType("bit");
 
                     b.Property<byte[]>("PasswordHash")

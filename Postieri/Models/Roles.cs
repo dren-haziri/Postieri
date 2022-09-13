@@ -1,9 +1,12 @@
-﻿namespace Postieri.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Postieri.Models
 {
     public class Roles
     {
-        public int Id{ get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        [Key]
+        public Guid Id{ get; set; }
+        public string Name { get; set; } 
+        public string Description { get; set; }  
     }
 }

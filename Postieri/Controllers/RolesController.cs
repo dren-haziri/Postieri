@@ -49,9 +49,9 @@ namespace Postieri.Controllers
            
         }
         [HttpDelete]
-        public async Task<ActionResult<List<Roles>>> Delete(int id)
+        public async Task<ActionResult<List<Roles>>> Delete(int guid)
         {
-            var role = await _context.Roles.FindAsync(id);
+            var role = await _context.Roles.FindAsync(guid);
             if (role == null)
                 return BadRequest("role not found");
 
