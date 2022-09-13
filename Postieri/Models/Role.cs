@@ -2,7 +2,7 @@
 
 namespace Postieri.Models
 {
-    public class Roles
+    public class Role
     {
         [Key]
         public Guid Id{ get; set; }

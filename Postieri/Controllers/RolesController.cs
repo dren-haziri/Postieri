@@ -19,13 +19,13 @@ namespace Postieri.Controllers
 
         }
         [HttpGet]
-        public async Task<ActionResult<List<Roles>>> Get()
+        public async Task<ActionResult<List<Role>>> Get()
         {
             return Ok(await _context.Roles.ToListAsync());
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Roles>>> AddRole(Roles role)
+        public async Task<ActionResult<List<Role>>> AddRole(Role role)
         {
             //allRoles.Add(role);
             _context.Roles.Add(role);
@@ -35,7 +35,7 @@ namespace Postieri.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Roles>>> UpdateRole(Roles request)
+        public async Task<ActionResult<List<Role>>> UpdateRole(Role request)
         {
             //var role = allRoles.Find(r => r.Id == request.Id);
             var role =await  _context.Roles.FindAsync(request.Id);
@@ -49,7 +49,7 @@ namespace Postieri.Controllers
            
         }
         [HttpDelete]
-        public async Task<ActionResult<List<Roles>>> Delete(Guid id)
+        public async Task<ActionResult<List<Role>>> Delete(Guid id)
         {
             var role = await _context.Roles.FindAsync(id);
             if (role == null)
