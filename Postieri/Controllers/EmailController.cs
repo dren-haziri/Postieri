@@ -14,29 +14,26 @@ namespace Postieri.Controllers
     [ApiController]
     public class EmailController : ControllerBase
     {
-        private readonly DataContext _context;
+ 
         private readonly IEmailService _emailService;
 
-        public EmailController(IEmailService emailService, DataContext context)
+        public EmailController(IEmailService emailService)
         {
             _emailService = emailService;
-            _context = context;
+           
         }
 
         [HttpPost]
         public IActionResult SendEmail()
         {
-            //var getLastEmail = (from d in _context.Users
-            //                    orderby d ascending
-            //                    select d.Email
-            //  ).LastOrDefault();
 
-            string getLastEmail = "test@gmail.com";
+
+            string to = "test@gmail.com";
 
             string subject = "Postieri Order";
             string body = "Postieri order details";
 
-            _emailService.SendLastEmail(getLastEmail, subject, body);
+            _emailService.SendEmail(to, subject, body);
 
             return Ok();
         }

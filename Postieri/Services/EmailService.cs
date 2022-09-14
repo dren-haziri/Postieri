@@ -16,29 +16,11 @@ namespace Postieri.Interfaces
             _config = config;
         }
 
-        public void SendEmail(EmailDto request)
-        {
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(request.From));
-            email.To.Add(MailboxAddress.Parse(_config.GetSection("EmailUserName").Value));
-            email.Subject = request.Subject;
-            email.Body = new TextPart(TextFormat.Html) { Text = request.Body };
-
-            using var smtp = new SmtpClient();
-
-            smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
-
-            smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_config.GetSection("EmailUserName").Value, _config.GetSection("EamilPassword").Value);
-            smtp.Send(email);
-            smtp.Disconnect(true);
-        }
-
-        public void SendLastEmail(string lastEmail, string subject, string body)
+        public void SendEmail(string to, string subject, string body)
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUserName").Value));
-            email.To.Add(MailboxAddress.Parse(lastEmail));
+            email.To.Add(MailboxAddress.Parse(to));
             email.Subject = subject;
             email.Body = new TextPart(TextFormat.Html) { Text = body };
 

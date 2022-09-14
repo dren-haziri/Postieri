@@ -3,8 +3,7 @@
 namespace Postieri.Interfaces
 {
     public interface IEmailService
-    {
-        void SendEmail(EmailDto request);
-        void SendLastEmail(string lastEmail, string subject, string body);
+    { 
+        void SendEmail(string to, string subject, string body);
     }
 }
