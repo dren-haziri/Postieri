@@ -21,7 +21,7 @@ namespace Postieri.Services
                 Name = request.Name,
                 Description = request.Description,
             };
-            if(role == null)
+            if(role == null && RoleExists(role))
                 return false;
             _context.Roles.Add(role);
             _context.SaveChanges();
@@ -30,7 +30,7 @@ namespace Postieri.Services
         public bool UpdateRole(Role request)
         {
             var role = _context.Roles.Find(request.Id);
-            if (role == null)
+            if (role == null && RoleExists(role))
                 return false;
             role.Name = request.Name;
             role.Description = request.Description;
@@ -41,11 +41,23 @@ namespace Postieri.Services
         public bool DeleteRole(Guid id)
         {
             var role = _context.Roles.Find(id);
-            if (role == null)
+            if (role == null && RoleExists(role))
                 return false;
             _context.Roles.Remove(role);
             _context.SaveChanges();
             return true;
+        }
+        public bool RoleExists(Role request)
+        {
+            var roleList = _context.Roles.ToList();
+            if (roleList.Contains(request))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }
