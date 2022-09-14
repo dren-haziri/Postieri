@@ -11,6 +11,9 @@ using MimeKit;
 using NuGet.Common;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json.Serialization;
+using System.Net.WebSockets;
+using System.Net;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -39,8 +42,10 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+builder.Services.AddScoped<IExportDataExcelService, ExportDataExcelService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IExportDataPdfService, ExportDataPdfService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -70,6 +75,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseRouting();
+app.UseWebSockets();
+
 app.MapControllers();
 
 app.Run();
+ 
