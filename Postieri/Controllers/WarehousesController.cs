@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
 using Postieri.Models;
+using Postieri.ViewModels;
 
 namespace Postieri.Controllers
 {
@@ -26,57 +28,57 @@ namespace Postieri.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Warehouse>>> GetWarehouse()
         {
-          if (_context.Warehouse == null)
-          {
-              return NotFound();
-          }
-            return await _context.Warehouse.ToListAsync();
+            if (_context.Warehouse == null)
+            {
+                return NotFound();
+            }
+            return await _context.Warehouse.AsNoTracking().Include(w => w.Shelves).ToListAsync();
         }
 
         // GET: api/Warehouses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Warehouse>> GetWarehouse(int id)
         {
-          if (_context.Warehouse == null)
-          {
-              return NotFound();
-          }
-            var warehouse = await _context.Warehouse.FindAsync(id);
-
-            if (warehouse == null)
+            if (_context.Warehouse == null)
             {
                 return NotFound();
             }
 
-            return warehouse;
+            var _warehouse = _context.Warehouse.Where(n => n.WarehouseId == id).Select(warehouse => new Warehouse()
+            {
+                WarehouseId = warehouse.WarehouseId,
+                Location = warehouse.Location,
+                Area = warehouse.Area,
+                Name = warehouse.Name,
+                NumOfShelves = warehouse.NumOfShelves,
+                Shelves = warehouse.Shelves
+             
+            }).FirstOrDefault();
+
+            if (_warehouse == null)
+            {
+                return NotFound();
+            }
+
+            return _warehouse;
         }
 
         // PUT: api/Warehouses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWarehouse(int id, Warehouse warehouse)
+        public async Task<IActionResult> PutWarehouse(int id, WarehouseDto warehouse)
         {
-            if (id != warehouse.WarehouseId)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(warehouse).State = EntityState.Modified;
+            var _warehouse = _context.Warehouse.FirstOrDefault(n => n.WarehouseId == id);
+            if (_warehouse != null)
+            {
+                _warehouse.Area = warehouse.Area;
+                _warehouse.NumOfShelves = warehouse.NumOfShelves;
+                _warehouse.Name = warehouse.Name;
+                _warehouse.Location = warehouse.Location;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!WarehouseExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
+                _context.SaveChanges();
             }
 
             return NoContent();
@@ -85,16 +87,26 @@ namespace Postieri.Controllers
         // POST: api/Warehouses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Warehouse>> PostWarehouse(Warehouse warehouse)
+        public async Task<ActionResult<Warehouse>> PostWarehouse(WarehouseDto warehouse)
         {
-          if (_context.Warehouse == null)
-          {
-              return Problem("Entity set 'DataContext.Warehouse'  is null.");
-          }
-            _context.Warehouse.Add(warehouse);
-            await _context.SaveChangesAsync();
+            if (_context.Warehouse == null)
+            {
+                return Problem("Entity set 'DataContext.Shelves'  is null.");
+            }
+         
 
+            var _warehouse = new Warehouse()
+            {
+                Name = warehouse.Name,
+                Area = warehouse.Area,
+                Location = warehouse.Location,
+                NumOfShelves = warehouse.NumOfShelves,
+
+            };
+            _context.Warehouse.Add(_warehouse);
+            _context.SaveChanges();
             return CreatedAtAction("GetWarehouse", new { id = warehouse.WarehouseId }, warehouse);
+
         }
 
         // DELETE: api/Warehouses/5
