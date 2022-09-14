@@ -65,7 +65,7 @@ namespace Postieri.Controllers
         // PUT: api/Warehouses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWarehouse(int id, WarehouseVM warehouse)
+        public async Task<IActionResult> PutWarehouse(int id, WarehouseDto warehouse)
         {
 
             var _warehouse = _context.Warehouse.FirstOrDefault(n => n.WarehouseId == id);
@@ -86,7 +86,7 @@ namespace Postieri.Controllers
         // POST: api/Warehouses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Warehouse>> PostWarehouse(WarehouseVM warehouse)
+        public async Task<ActionResult<Warehouse>> PostWarehouse(WarehouseDto warehouse)
         {
             if (_context.Warehouse == null)
             {

@@ -63,7 +63,7 @@ namespace Postieri.Controllers
         // PUT: api/Shelves/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShelf(int id, ShelfVM shelf)
+        public async Task<IActionResult> PutShelf(int id, ShelfDto shelf)
         {
             if (id != shelf.ShelfId)
             {
@@ -87,7 +87,7 @@ namespace Postieri.Controllers
         // POST: api/Shelves
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Shelf>> PostShelf(ShelfVM shelf)
+        public async Task<ActionResult<Shelf>> PostShelf(ShelfDto shelf)
         {
             if (_context.Shelves == null)
             {

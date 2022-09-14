@@ -1,6 +1,6 @@
-﻿namespace Postieri.ViewModels
+﻿namespace Postieri.DTOs
 {
-    public class ShelfVM
+    public class ShelfDto
     {
         public int ShelfId { get; set; }
         public int WarehouseId { get; set; }
