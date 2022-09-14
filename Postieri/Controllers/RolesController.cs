@@ -23,21 +23,24 @@ namespace Postieri.Controllers
         }
 
         [HttpPost]
-        public ActionResult<List<Role>> AddRole(Role role)
+        public ActionResult<List<Role>> AddRole(Role request)
         {
-            return Ok( _rolesService.AddRole(role));
+            _rolesService.AddRole(request);
+            return Ok(_rolesService.GetRoles());
         }
 
         [HttpPut]
         public ActionResult<List<Role>> UpdateRole(Role request)
         {
-            return Ok(_rolesService.UpdateRole(request));
+            _rolesService.UpdateRole(request);
+            return Ok(_rolesService.GetRoles());
         }
 
         [HttpDelete]
         public ActionResult<List<Role>> Delete(Guid id)
         {
-            return Ok(_rolesService.DeleteRole(id));
+            _rolesService.DeleteRole(id);
+            return Ok(_rolesService.GetRoles());
         }
     }
 }

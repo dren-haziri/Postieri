@@ -5,8 +5,8 @@ namespace Postieri.Interfaces
     public interface IRolesService
     {
         List<Role> GetRoles();
-        List<Role> AddRole(Role role);
-        List<Role> UpdateRole(Role request);
-        List<Role> DeleteRole(Guid id);
+        bool AddRole(Role request);
+        bool UpdateRole(Role request);
+        bool DeleteRole(Guid id);
     }
 }
