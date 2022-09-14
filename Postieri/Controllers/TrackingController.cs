@@ -55,9 +55,6 @@ namespace Postieri.Controllers
             Random randNum = new Random();
             int[] longitude = Enumerable.Repeat(0, 10).Select(i => randNum.Next(9190, 391000)).ToArray();
             int[] latitude = Enumerable.Repeat(0, 10).Select(i => randNum.Next(8790, 5831000)).ToArray();
-
-           // var timer = new PeriodicTimer(TimeSpan.FromSeconds(10));
-            //while (await timer.WaitForNextTickAsync())
             
                 for (int i = 0; i < longitude.Length; i++)
                 {
@@ -68,7 +65,8 @@ namespace Postieri.Controllers
 
                     await webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
                     _logger.Log(LogLevel.Information, "Longitude and Latitude send to Client.");
-                }
+                    Thread.Sleep(5000);
+            }
             
         }
 
