@@ -10,44 +10,35 @@ namespace Postieri.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-
-      
-        private readonly DataContext _context;
         private readonly IRolesService _rolesService;
-        public RolesController(DataContext context, IRolesService rolesService)
+        public RolesController(IRolesService rolesService)
         {
-            _context = context;
             _rolesService = rolesService;
         }
+
         [HttpGet]
-        public async Task<ActionResult<List<Role>>> Get()
+        public ActionResult<List<Role>> Get()
         {
-            return Ok(await _context.Roles.ToListAsync());
+            return Ok( _rolesService.GetRoles());
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Role>>> AddRole(Role role)
+        public ActionResult<List<Role>> AddRole(Role role)
         {
-            _rolesService.AddRole(role);
-            return Ok(await _context.Roles.ToListAsync());
-
+            return Ok( _rolesService.AddRole(role));
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Role>>> UpdateRole(Role request)
+        public ActionResult<List<Role>> UpdateRole(Role request)
         {
-            _rolesService.UpdateRole(request);
-            return Ok(await _context.Roles.ToListAsync());
-           
+            return Ok(_rolesService.UpdateRole(request));
         }
+
         [HttpDelete]
-        public async Task<ActionResult<List<Role>>> Delete(Guid id)
+        public ActionResult<List<Role>> Delete(Guid id)
         {
-            _rolesService.DeleteRole(id);
-            return Ok(await _context.Roles.ToListAsync());
+            return Ok(_rolesService.DeleteRole(id));
         }
     }
-
-
-    }
+}
 
