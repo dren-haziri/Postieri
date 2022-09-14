@@ -37,7 +37,21 @@ namespace Postieri.Controllers
                 await SendConnIDAsync(webSocket, ConnID);
 
                 await SendCoordinatesAsync(webSocket);
-            }
+
+                await Receive(webSocket, async (result, buffer) =>
+                {
+                    if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        string id = _manager.GetAllSockets().FirstOrDefault(s => s.Value == webSocket).Key;  
+                        _manager.GetAllSockets().TryRemove(id, out WebSocket sock);
+
+                        await sock.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+                        _logger.Log(LogLevel.Information, "WebSocket is Closed.");
+
+                        return;
+                    }
+                });
+            }      
             else
             {
                 HttpContext.Response.StatusCode = 400;
@@ -71,6 +85,20 @@ namespace Postieri.Controllers
         }
 
         //-----------------------------------------------------------------
+
+        private async Task Receive(WebSocket webSocket, Action<WebSocketReceiveResult, byte[]> handleMessage)
+        {
+            var buffer = new byte[1024 * 4];
+
+            while (webSocket.State == WebSocketState.Open)
+            {
+                var result = await webSocket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer),
+                    cancellationToken: CancellationToken.None);
+
+                handleMessage(result, buffer);
+            }
+        }
+        //---------------------------------------------------------
 
     }
 }
