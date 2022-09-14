@@ -18,18 +18,16 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.Web.Http.Validation.Providers;
 using Postieri.Models;
+using System.Text.Json.Serialization;
 using System.Net.WebSockets;
 using System.Net;
 using System.Text;
-
-
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
+
 
 
 builder.Services.AddControllers();
@@ -43,6 +41,10 @@ builder.Services.AddFluentValidation(fv =>
     fv.RegisterValidatorsFromAssemblyContaining<Program>();
     NewMethod(fv);
 });
+
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
