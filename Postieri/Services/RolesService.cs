@@ -18,46 +18,67 @@ namespace Postieri.Services
         {
             var role = new Role()
             {
+                Id = request.Id,
                 Name = request.Name,
                 Description = request.Description,
             };
-            if(role == null && RoleExists(role))
+            if(role == null)
+            {
                 return false;
-            _context.Roles.Add(role);
-            _context.SaveChanges();
-            return true;
-        }
-        public bool UpdateRole(Role request)
-        {
-            var role = _context.Roles.Find(request.Id);
-            if (role == null && RoleExists(role))
-                return false;
-            role.Name = request.Name;
-            role.Description = request.Description;
-
-            _context.SaveChanges();
-            return true;
-        }
-        public bool DeleteRole(Guid id)
-        {
-            var role = _context.Roles.Find(id);
-            if (role == null && RoleExists(role))
-                return false;
-            _context.Roles.Remove(role);
-            _context.SaveChanges();
-            return true;
-        }
-        public bool RoleExists(Role request)
-        {
-            var roleList = _context.Roles.ToList();
-            if (roleList.Contains(request))
+            }
+            else if(RoleExists(role))
             {
                 return false;
             }
             else
             {
+                _context.Roles.Add(role);
+                _context.SaveChanges();
                 return true;
             }
+        }
+        public bool UpdateRole(Role request)
+        {
+            var role = _context.Roles.Find(request.Id);
+            if (role == null)
+            {
+                return false;
+            }
+            else if (!RoleExists(role))
+            {
+                return false;
+            }
+            else
+            {
+                role.Name = request.Name;
+                role.Description = request.Description;
+
+                _context.SaveChanges();
+                return true;
+            }
+        }
+        public bool DeleteRole(Guid id)
+        {
+            var role = _context.Roles.Find(id);
+            if (role == null)
+            {
+                return false;
+            }
+            else if (!RoleExists(role))
+            {
+                return false;
+            }
+            else
+            {
+                _context.Roles.Remove(role);
+                _context.SaveChanges();
+                return true;
+            } 
+        }
+        public bool RoleExists(Role request)
+        {
+            bool alreadyExist = _context.Roles.Any(x => x.Id == request.Id || x.Name == request.Name || x.Description == request.Description);
+            return alreadyExist;
         }
     }
 }
