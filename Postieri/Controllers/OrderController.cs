@@ -11,17 +11,61 @@ namespace Postieri.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
+        private readonly IOrderService _orderService;
         private readonly DataContext _context;
-        public OrderController(DataContext context)
+        public OrderController(IOrderService orderService, DataContext context)
         {
+            _orderService = orderService;
             _context = context;
-
         }
         [HttpGet]
-        public async Task<ActionResult<Order>> Get()
+        public ActionResult<List<Order>> Get()
         {
-            return Ok(await _context.Orders.ToListAsync());
+            return Ok(_orderService.GetOrders());
         }
+
+        [HttpPost]
+        public ActionResult<List<Order>> AddOrder(Order request)
+        {
+            _orderService.AddOrder(request);
+            return Ok(_orderService.GetOrders());
+        }
+
+        [HttpPut]
+        public ActionResult<List<Order>> UpdateOrder(Order request)
+        {
+            _orderService.UpdateOrder(request);
+            return Ok(_orderService.GetOrders());
+        }
+
+        [HttpDelete]
+        public ActionResult<List<Order>> DeleteOrder(Guid id)
+        {
+            _orderService.DeleteOrder(id);
+            return Ok(_orderService.GetOrders());
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrderById(Guid orderId)
@@ -49,46 +93,6 @@ namespace Postieri.Controllers
 
             return Ok(_order);
         }
-
-        [HttpPost]
-        public async Task<ActionResult<List<Order>>> AddOrder(Order orders)
-        {
-
-            _context.Orders.Add(orders);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Orders.ToListAsync());
-        }
-        [HttpPut]
-        public async Task<ActionResult<List<Order>>> UpdateOrder(Order request)
-        {
-           
-            var orders = await _context.Orders.FindAsync(request.OrderId);
-            if (orders == null)
-                return BadRequest("Order not found!");
-            orders.Price = request.Price;
-            orders.Address = request.Address;
-            orders.Sign = request.Sign;
-            orders.Status = request.Status;
-            orders.CourierId = request.CourierId;
-
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Orders.ToListAsync());
-        }
-
-
-
-            [HttpDelete]
-        public async Task<ActionResult<List<Order>>> Delete(Guid id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-                return BadRequest("order not found");
-
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Roles.ToListAsync());
-        }
-
 
     }
 }
