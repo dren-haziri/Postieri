@@ -32,6 +32,29 @@ namespace Postieri.Controllers
             return await _context.Vehicles.ToListAsync();
         }
 
+        [HttpGet("GetAllAvailableVehiclesWithoutDefect")]
+       
+        public async Task<ActionResult<IEnumerable<Vehicle>>> GetAllAvailableVehiclesWithoutDefect()
+        {
+            if (_context.Vehicles == null)
+            {
+                return NotFound();
+            }
+            return await _context.Vehicles.Where(x => x.IsAvailable==true && x.HasDefect==false).ToListAsync();
+        }
+
+        [HttpGet("GetAllVehiclesWithDefect")]
+
+        public async Task<ActionResult<IEnumerable<Vehicle>>> GetAllVehiclesWithDefect()
+        {
+            if (_context.Vehicles == null)
+            {
+                return NotFound();
+            }
+                return await _context.Vehicles.Where(x => x.HasDefect == true).ToListAsync();
+            
+        }
+
         // GET: api/Vehicles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Vehicle>> GetVehicle(int id)
@@ -51,7 +74,7 @@ namespace Postieri.Controllers
         }
 
         // PUT: api/Vehicles/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVehicle(int id, Vehicle vehicle)
         {
@@ -62,8 +85,6 @@ namespace Postieri.Controllers
             var _vehicle = _context.Vehicles.FirstOrDefault(n => n.Id == id);
             if (_vehicle != null)
             {
-
-
                 _vehicle.Height = vehicle.Height;
                 _vehicle.Length = vehicle.Length;
                 _vehicle.Width = vehicle.Width;
@@ -76,8 +97,6 @@ namespace Postieri.Controllers
                 _vehicle.Type = vehicle.Type;
                 _vehicle.PlateNumber = vehicle.PlateNumber;
                 await _context.SaveChangesAsync();
-
-
             }
 
 
@@ -85,7 +104,7 @@ namespace Postieri.Controllers
         }
 
         // POST: api/Vehicles
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+     
         [HttpPost]
         public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle vehicle)
         {
