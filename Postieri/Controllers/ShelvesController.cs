@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
 using Postieri.Models;
+using Postieri.ViewModels;
 
 namespace Postieri.Controllers
 {
@@ -34,48 +35,50 @@ namespace Postieri.Controllers
 
         // GET: api/Shelves/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Shelf>> GetShelf(int id)
+      
+        public async Task<ActionResult<Shelf>> GetShelfl(int id)
         {
-          if (_context.Shelves == null)
-          {
-              return NotFound();
-          }
-            var shelf = await _context.Shelves.FindAsync(id);
-
-            if (shelf == null)
+            if (_context.Shelves == null)
             {
                 return NotFound();
             }
 
-            return shelf;
+            var _shelf = _context.Shelves.Where(n => n.ShelfId == id).Select(shelf => new Shelf()
+            {
+                WarehouseId = shelf.WarehouseId,
+                BinLetter = shelf.BinLetter,
+                MaxProducts = shelf.MaxProducts,
+                ShelfId = shelf.ShelfId,
+                
+            }).FirstOrDefault();
+
+            if (_shelf == null)
+            {
+                return NotFound();
+            }
+
+            return _shelf;
         }
 
         // PUT: api/Shelves/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShelf(int id, Shelf shelf)
+        public async Task<IActionResult> PutShelf(int id, ShelfDto shelf)
         {
             if (id != shelf.ShelfId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(shelf).State = EntityState.Modified;
+            var _shelf = _context.Shelves.FirstOrDefault(n => n.ShelfId == id);
+            if (_shelf != null)
+            {
+                _shelf.BinLetter = shelf.BinLetter;
+                _shelf.MaxProducts = shelf.MaxProducts;
+                _shelf.WarehouseId = shelf.WarehouseId;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ShelfExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
+                _context.SaveChanges();
             }
 
             return NoContent();
@@ -84,14 +87,24 @@ namespace Postieri.Controllers
         // POST: api/Shelves
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Shelf>> PostShelf(Shelf shelf)
+        public async Task<ActionResult<Shelf>> PostShelf(ShelfDto shelf)
         {
-          if (_context.Shelves == null)
-          {
-              return Problem("Entity set 'DataContext.Shelves'  is null.");
-          }
-            _context.Shelves.Add(shelf);
-            await _context.SaveChangesAsync();
+            if (_context.Shelves == null)
+            {
+                return Problem("Entity set 'DataContext.Shelves'  is null.");
+            }
+            
+
+            var _shelf = new Shelf()
+            {
+                ShelfId = shelf.ShelfId,
+                WarehouseId = shelf.WarehouseId,
+                BinLetter = shelf.BinLetter,
+                MaxProducts = shelf.MaxProducts
+          
+            };
+            _context.Shelves.Add(_shelf);
+            _context.SaveChanges();
 
             return CreatedAtAction("GetShelf", new { id = shelf.ShelfId }, shelf);
         }
