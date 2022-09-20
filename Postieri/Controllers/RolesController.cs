@@ -10,57 +10,38 @@ namespace Postieri.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-
-      
-        private readonly DataContext _context;
-        public RolesController(DataContext context)
+        private readonly IRolesService _rolesService;
+        public RolesController(IRolesService rolesService)
         {
-            _context = context;
-
+            _rolesService = rolesService;
         }
+
         [HttpGet]
-        public async Task<ActionResult<List<Roles>>> Get()
+        public ActionResult<List<Role>> Get()
         {
-            return Ok(await _context.Roles.ToListAsync());
+            return Ok( _rolesService.GetRoles());
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Roles>>> AddRole(Roles role)
+        public ActionResult<List<Role>> AddRole(Role request)
         {
-            //allRoles.Add(role);
-            _context.Roles.Add(role);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Roles.ToListAsync());
-
+            _rolesService.AddRole(request);
+            return Ok(_rolesService.GetRoles());
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Roles>>> UpdateRole(Roles request)
+        public ActionResult<List<Role>> UpdateRole(Role request)
         {
-            //var role = allRoles.Find(r => r.Id == request.Id);
-            var role =await  _context.Roles.FindAsync(request.Id);
-            if (role == null)
-                return BadRequest("role not found");
-            role.Name = request.Name;
-            role.Description = request.Description;
-
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Roles.ToListAsync());
-           
+            _rolesService.UpdateRole(request);
+            return Ok(_rolesService.GetRoles());
         }
+
         [HttpDelete]
-        public async Task<ActionResult<List<Roles>>> Delete(int id)
+        public ActionResult<List<Role>> Delete(Guid id)
         {
-            var role = await _context.Roles.FindAsync(id);
-            if (role == null)
-                return BadRequest("role not found");
-
-            _context.Roles.Remove(role);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Roles.ToListAsync());
+            _rolesService.DeleteRole(id);
+            return Ok(_rolesService.GetRoles());
         }
     }
-
-
-    }
+}
 
