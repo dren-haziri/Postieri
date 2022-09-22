@@ -99,7 +99,8 @@ namespace Postieri.Controllers
 
             return Ok(response);
         }
-        //[Authorize(Roles = "Administrator")]
+
+        [Authorize(Roles = "Administrator")]
         [HttpPost("Suspened")]
         public async Task<ActionResult<ServiceResponse<string>>> Suspened(string email)
         {
@@ -111,9 +112,9 @@ namespace Postieri.Controllers
 
             return Ok(response);
         }
-        //[Authorize(Roles = "Administrator")]
-        [HttpPost("Unsuspened")]
 
+        [Authorize(Roles = "Administrator")]
+        [HttpPost("Unsuspened")]
         public async Task<ActionResult<ServiceResponse<string>>> Unsuspened(string email)
         {
             var response = await _authService.Unsuspend(email);
@@ -125,7 +126,7 @@ namespace Postieri.Controllers
             return Ok(response);
         }
 
-        //[Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         [HttpPut("AssignRole")]
         public async Task<ActionResult<ServiceResponse<string>>> AssignRole(string email, AssignRoleDto request)
         {
@@ -138,6 +139,7 @@ namespace Postieri.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPut("RevokeRole")]
         public async Task<ActionResult<ServiceResponse<string>>> RevokeRole(string email)
         {

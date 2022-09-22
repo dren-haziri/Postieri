@@ -1,10 +1,13 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+﻿using DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Postieri.Data;
 using Postieri.Models;
+using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -71,7 +74,7 @@ namespace Postieri.Services
                 response.Success = false;
                 response.Message = "User is suspended.";
             }
-            else if (user.RoleId == null)
+            else if (user.RoleName == "NoRole")
             {
                 response.Success = false;
                 response.Message = "User needs to be assigned a role.";
@@ -197,7 +200,7 @@ namespace Postieri.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.Role, user.RoleId.ToString())
+                new Claim(ClaimTypes.Role, user.RoleName)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
@@ -253,6 +256,7 @@ namespace Postieri.Services
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
+                IDs = user.UserId,
                 Success = true,
                 Message = "User has been suspended"
             };
@@ -274,6 +278,7 @@ namespace Postieri.Services
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
+                IDs = user.UserId,
                 Success = true,
                 Message = "User has been unsuspended"
             };
@@ -283,6 +288,8 @@ namespace Postieri.Services
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            var role = _context.Roles.Find(roleId);
+
             if (user == null)
             {
                 return new ServiceResponse<string>
@@ -291,11 +298,28 @@ namespace Postieri.Services
                     Message = "User not found."
                 };
             }
+            if (role == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "Role does not exist."
+                };
+            }
 
             user.RoleId = roleId;
+            user.RoleName = role.RoleName;
+            user.VerificationToken = CreateToken(user); //new jwt needed bc the ClaimTypes.Role has to change regarding the new Role assignment
+
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<string> { IDs = roleId, Success = true, Message = "Role updated successfully" };
+            return new ServiceResponse<string> 
+            { 
+                IDs = roleId, 
+                Data = user.Username + " has been assigned as a " + user.RoleName, 
+                Success = true, 
+                Message = "Role updated successfully" 
+            };
         }
 
         public async Task<ServiceResponse<string>> RevokeRole(string email)
@@ -312,9 +336,16 @@ namespace Postieri.Services
             }
 
             user.RoleId = null;
+            user.RoleName = "NoRole";
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<string> { IDs = user.UserId, Success = true, Message = "Role revoked successfully" };
+            return new ServiceResponse<string> 
+            { 
+                IDs = user.UserId,
+                Data = user.Username + " has been revoked of their role",
+                Success = true, 
+                Message = "Role revoked successfully" 
+            };
         }
     }
 }
