@@ -18,7 +18,7 @@ namespace Postieri.Services
         {
             var role = new Role()
             {
-                Id = request.Id,
+                RoleId = request.RoleId,
                 Name = request.Name,
                 Description = request.Description,
             };
@@ -39,7 +39,7 @@ namespace Postieri.Services
         }
         public bool UpdateRole(Role request)
         {
-            var role = _context.Roles.Find(request.Id);
+            var role = _context.Roles.Find(request.RoleId);
             if (role == null)
             {
                 return false;
@@ -77,7 +77,7 @@ namespace Postieri.Services
         }
         public bool RoleExists(Role request)
         {
-            bool alreadyExist = _context.Roles.Any(x => x.Id == request.Id || x.Name == request.Name || x.Description == request.Description);
+            bool alreadyExist = _context.Roles.Any(x => x.RoleId == request.RoleId || x.Name == request.Name || x.Description == request.Description);
             return alreadyExist;
         }
     }

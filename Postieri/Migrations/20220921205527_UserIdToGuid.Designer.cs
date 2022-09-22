@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Postieri.Data;
 
@@ -11,9 +12,10 @@ using Postieri.Data;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220921205527_UserIdToGuid")]
+    partial class UserIdToGuid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,7 +100,7 @@ namespace Postieri.Migrations
 
             modelBuilder.Entity("Postieri.Models.Role", b =>
                 {
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -110,7 +112,7 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("RoleId");
+                    b.HasKey("Id");
 
                     b.ToTable("Roles");
                 });
@@ -213,7 +215,7 @@ namespace Postieri.Migrations
 
             modelBuilder.Entity("Postieri.User", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -255,7 +257,7 @@ namespace Postieri.Migrations
                     b.Property<DateTime?>("ResetTokenExpires")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("RoleId")
+                    b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
@@ -268,7 +270,7 @@ namespace Postieri.Migrations
                     b.Property<DateTime?>("VerifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
@@ -290,7 +292,9 @@ namespace Postieri.Migrations
                 {
                     b.HasOne("Postieri.Models.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Role");
                 });

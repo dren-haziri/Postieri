@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Postieri.Data;
@@ -39,7 +41,7 @@ namespace Postieri.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<int> { Data = user.UserId, Message = "Registration successful!" };
+            return new ServiceResponse<int> { IDs = user.UserId, Message = "Registration successful!" };
         }
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
@@ -69,6 +71,7 @@ namespace Postieri.Services
             }
             else
             {
+                response.IDs = user.UserId;
                 response.Data = user.VerificationToken;
                 response.Message = "Login successful!";
             }
@@ -185,7 +188,7 @@ namespace Postieri.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.Role, user.RoleName)
+                //new Claim(ClaimTypes.Role, user.RoleName)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
@@ -203,7 +206,7 @@ namespace Postieri.Services
             return jwt;
         }
 
-        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        public async Task<ServiceResponse<bool>> ChangePassword(Guid userId, string newPassword)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
@@ -267,5 +270,66 @@ namespace Postieri.Services
             };
         }
 
+        public async Task<ServiceResponse<string>> AssignRole(string email, Guid roleId)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            //var user = _context.Users.Find(email);
+            if (user == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+
+            user.RoleId = roleId;
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<string> { IDs = roleId, Success = true, Message = "Role updated successfully" };
+        }
+
+        //public async Task<ServiceResponse<string>> RevokeRole(Guid userId, Guid roleId)
+        //{
+        //    var user = await _context.Users
+        //        .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+        //    if (user == null)
+        //    {
+        //        return new ServiceResponse<string>
+        //        {
+        //            Success = false,
+        //            Message = "User not found."
+        //        };
+        //    }
+        //    user.IsSuspended = false;
+        //    await _context.SaveChangesAsync();
+        //    return new ServiceResponse<string>
+        //    {
+        //        Success = true,
+        //        Message = "User was unsuspended"
+        //    };
+        //}
+
+        //public async Task<ServiceResponse<string>> ReassignRole(Guid userId, Guid roleId)
+        //{
+        //    var user = await _context.Users
+        //        .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+        //    if (user == null)
+        //    {
+        //        return new ServiceResponse<string>
+        //        {
+        //            Success = false,
+        //            Message = "User not found."
+        //        };
+        //    }
+        //    user.IsSuspended = false;
+        //    await _context.SaveChangesAsync();
+        //    return new ServiceResponse<string>
+        //    {
+        //        Success = true,
+        //        Message = "User was unsuspended"
+        //    };
+        //}
     }
 }

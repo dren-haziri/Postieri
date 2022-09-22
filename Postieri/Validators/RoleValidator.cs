@@ -3,7 +3,7 @@ using Postieri.Models;
 
 namespace Postieri.Validators
 {
-    public class RoleValidator:AbstractValidator<Roles>
+    public class RoleValidator:AbstractValidator<Role>
     {
         public RoleValidator()
         {

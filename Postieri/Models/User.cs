@@ -1,4 +1,5 @@
-﻿using Postieri.Validators;
+﻿using Postieri.Models;
+using Postieri.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,14 +10,17 @@ namespace Postieri
 {
     public class User
     {
-        public int UserId { get; set; }
+        [Key]
+        public Guid UserId { get; set; }
         public string Username { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
      
         public string Email { get; set; }
         public string CompanyName { get; set; }
-        public string RoleName { get; set; }
+        public Guid? RoleId { get; set; }
+        //public string RoleName { get; set; }
+        public Role? Role { get; set; }
         public bool IsSuspended { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime RegisterDate { get; set; } = DateTime.Now;

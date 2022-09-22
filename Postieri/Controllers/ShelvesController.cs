@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
 using Postieri.Models;
-using Postieri.ViewModels;
+//using Postieri.ViewModels;
 
 namespace Postieri.Controllers
 {

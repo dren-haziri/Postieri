@@ -12,6 +12,9 @@ namespace Postieri.Interfaces
         Task<bool> UserExists(string email);
         Task<ServiceResponse<string>> Suspend(string email);
         Task<ServiceResponse<string>> Unsuspend(string email);
+        Task<ServiceResponse<string>> AssignRole(string email, Guid roleId);
+        //Task<ServiceResponse<string>> RevokeRole(Guid userId, Guid roleId);
+        //Task<ServiceResponse<string>> ReassignRole(Guid userId, Guid roleId);
 
     }
 }
