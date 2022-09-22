@@ -12,8 +12,8 @@ using Postieri.Data;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220921212221_idkatthispoint")]
-    partial class idkatthispoint
+    [Migration("20220922123144_UserRoleAssign")]
+    partial class UserRoleAssign
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -108,7 +108,7 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("RoleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -259,6 +259,10 @@ namespace Postieri.Migrations
 
                     b.Property<Guid?>("RoleId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()

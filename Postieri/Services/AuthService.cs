@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Postieri.Data;
+using Postieri.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -49,6 +50,7 @@ namespace Postieri.Services
             var response = new ServiceResponse<string>();
             var user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+
             if (user == null)
             {
                 response.Success = false;
@@ -69,10 +71,15 @@ namespace Postieri.Services
                 response.Success = false;
                 response.Message = "User is suspended.";
             }
+            else if (user.RoleId == null)
+            {
+                response.Success = false;
+                response.Message = "User needs to be assigned a role.";
+            }
             else
             {
                 response.IDs = user.UserId;
-                response.Data = user.VerificationToken;
+                response.Data = "Welcome " + user.Username;
                 response.Message = "Login successful!";
             }
 
@@ -91,6 +98,8 @@ namespace Postieri.Services
             }
             else
             {
+                response.IDs = user.UserId;
+                response.Data = user.VerificationToken;
                 response.Message = "Verification successful!";
 
                 user.VerifiedAt = DateTime.Now;
@@ -188,7 +197,7 @@ namespace Postieri.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.Email),
-                //new Claim(ClaimTypes.Role, user.RoleName)
+                new Claim(ClaimTypes.Role, user.RoleId.ToString())
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
@@ -245,7 +254,7 @@ namespace Postieri.Services
             return new ServiceResponse<string>
             {
                 Success = true,
-                Message = "User was suspended"
+                Message = "User has been suspended"
             };
         }
 
@@ -266,7 +275,7 @@ namespace Postieri.Services
             return new ServiceResponse<string>
             {
                 Success = true,
-                Message = "User was unsuspended"
+                Message = "User has been unsuspended"
             };
         }
 
@@ -274,7 +283,6 @@ namespace Postieri.Services
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
-            //var user = _context.Users.Find(email);
             if (user == null)
             {
                 return new ServiceResponse<string>
@@ -290,46 +298,23 @@ namespace Postieri.Services
             return new ServiceResponse<string> { IDs = roleId, Success = true, Message = "Role updated successfully" };
         }
 
-        //public async Task<ServiceResponse<string>> RevokeRole(Guid userId, Guid roleId)
-        //{
-        //    var user = await _context.Users
-        //        .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
-        //    if (user == null)
-        //    {
-        //        return new ServiceResponse<string>
-        //        {
-        //            Success = false,
-        //            Message = "User not found."
-        //        };
-        //    }
-        //    user.IsSuspended = false;
-        //    await _context.SaveChangesAsync();
-        //    return new ServiceResponse<string>
-        //    {
-        //        Success = true,
-        //        Message = "User was unsuspended"
-        //    };
-        //}
+        public async Task<ServiceResponse<string>> RevokeRole(string email)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
 
-        //public async Task<ServiceResponse<string>> ReassignRole(Guid userId, Guid roleId)
-        //{
-        //    var user = await _context.Users
-        //        .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
-        //    if (user == null)
-        //    {
-        //        return new ServiceResponse<string>
-        //        {
-        //            Success = false,
-        //            Message = "User not found."
-        //        };
-        //    }
-        //    user.IsSuspended = false;
-        //    await _context.SaveChangesAsync();
-        //    return new ServiceResponse<string>
-        //    {
-        //        Success = true,
-        //        Message = "User was unsuspended"
-        //    };
-        //}
+            user.RoleId = null;
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<string> { IDs = user.UserId, Success = true, Message = "Role revoked successfully" };
+        }
     }
 }
