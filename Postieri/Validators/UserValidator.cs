@@ -13,7 +13,7 @@ namespace Postieri.Validators
             RuleFor(user => user.Email).EmailAddress().NotEmpty().NotNull();
             RuleFor(user => user.PhoneNumber).NotEmpty().NotNull();
             RuleFor(user => user.CompanyName).MinimumLength(2).WithMessage("{PropertyName} must have 2 or more characters ").NotEmpty().NotNull();
-            RuleFor(user => user.RoleName).NotEmpty().NotNull().Length(3,25);
+            //RuleFor(user => user.RoleName).NotEmpty().NotNull().Length(3,25);
         }
     
        
