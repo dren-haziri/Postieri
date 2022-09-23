@@ -1,5 +1,6 @@
 ﻿using Postieri.Data;
 using Postieri.Models;
+using System.Linq;
 
 namespace Postieri.Services
 {
@@ -76,10 +77,9 @@ namespace Postieri.Services
                 return true;
             }
         }
-
-        public bool DeleteOrder(Guid id)
+        public bool DeleteOrder(Order OrderId)
         {
-            var order = _context.Orders.Find(id);
+            var order = _context.Orders.Find(OrderId);
             if (order == null)
             {
                 return false;
@@ -95,7 +95,11 @@ namespace Postieri.Services
                 return true;
             }
         }
-
+        public List<Order> GetOrderById(Guid OrderId)
+        {
+            var order = _context.Orders.Where(n => n.OrderId == OrderId).ToList();
+            return order;
+        }
         public bool OrderExists(Order request)
         {
             bool alreadyExist = _context.Orders.Any(x => x.OrderId == request.OrderId || x.ProductId == request.ProductId);

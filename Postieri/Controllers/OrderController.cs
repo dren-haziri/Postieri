@@ -39,60 +39,16 @@ namespace Postieri.Controllers
         }
 
         [HttpDelete]
-        public ActionResult<List<Order>> DeleteOrder(Guid id)
+        public ActionResult<List<Order>> DeleteOrder(Order OrderId)
         {
-            _orderService.DeleteOrder(id);
-            return Ok(_orderService.GetOrders());
+            _orderService.DeleteOrder(OrderId);
+            return Ok(_orderService.GetOrders()); ;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrderById(Guid orderId)
+        public ActionResult<Order> GetOrderById(Guid OrderId)
         {
-            var errorResponse = new ServiceResponse<string>();
-
-
-            if (_context.Orders == null)
-            {
-                errorResponse.Success = false;
-                errorResponse.Message = "Order not found!";
-                return BadRequest(errorResponse);
-
-            }
-            var _order = _context.Orders.FirstOrDefault(n => n.OrderId == orderId);
-            if (_order == null)
-            {
-                errorResponse.Success = false;
-                errorResponse.Message = "Order doesn't exists!";
-                return BadRequest(errorResponse);
-            }
-
-
-
-
-            return Ok(_order);
+            return Ok(_orderService.GetOrderById(OrderId));
         }
-
     }
 }
