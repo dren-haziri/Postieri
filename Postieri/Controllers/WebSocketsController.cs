@@ -101,21 +101,12 @@ namespace Postieri.Controllers
                             WebSocketMessageType.Text, true, CancellationToken.None);
                     }
                 }
-                else
-                {
-                    Console.WriteLine("Invalid Recipient");
-                } 
             }
             else
             {
-                Console.WriteLine("Broadcast");
-                foreach (var sock in _manager.GetAllSockets())
-                {
-                    if (sock.Value.State == WebSocketState.Open)
-                        await sock.Value.SendAsync(Encoding.UTF8.GetBytes(routeOb.Message.ToString()),
-                            WebSocketMessageType.Text, true, CancellationToken.None);
-                }
-            }
+                Console.WriteLine("Invalid Recipient");
+            } 
+           
         }
         //-----------------------------------
 
