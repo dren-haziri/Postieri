@@ -12,8 +12,9 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Net.WebSockets;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
-
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Postieri.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -56,8 +57,44 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddSingleton<WebSocketServerConnectionManager>();
+builder.Services.AddSingleton<ILiveChatHandler, LiveChatHandler>();
 
 var app = builder.Build();
+
+//---------------
+var webSocketOptions = new WebSocketOptions()
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(120),
+    ReceiveBufferSize = 4 * 1024
+};
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/push")
+    {
+        if (context.WebSockets.IsWebSocketRequest)
+        {
+            WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+
+            try
+            {
+                var handler = app.Services.GetRequiredService<ILiveChatHandler>();
+                await handler.PushAsync(context, webSocket);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    }
+    else
+    {
+        await next();
+    }
+});
 
 
 
