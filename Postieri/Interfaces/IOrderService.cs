@@ -8,6 +8,6 @@ namespace Postieri.Interfaces
         List<Order> GetOrderById(Guid OrderId);
         bool AddOrder(Order request);
         bool UpdateOrder(Order request);
-        bool DeleteOrder(Order OrderId);
+        bool DeleteOrder(Guid OrderId);
     }
 }

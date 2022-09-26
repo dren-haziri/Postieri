@@ -12,11 +12,9 @@ namespace Postieri.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        private readonly DataContext _context;
-        public OrderController(IOrderService orderService, DataContext context)
+        public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
-            _context = context;
         }
         [HttpGet]
         public ActionResult<List<Order>> Get()
@@ -39,10 +37,10 @@ namespace Postieri.Controllers
         }
 
         [HttpDelete]
-        public ActionResult<List<Order>> DeleteOrder(Order OrderId)
+        public ActionResult<List<Order>> DeleteOrder(Guid OrderId)
         {
             _orderService.DeleteOrder(OrderId);
-            return Ok(_orderService.GetOrders()); ;
+            return Ok(_orderService.GetOrders());
         }
 
         [HttpGet("{id}")]

@@ -77,7 +77,7 @@ namespace Postieri.Services
                 return true;
             }
         }
-        public bool DeleteOrder(Order OrderId)
+        public bool DeleteOrder(Guid OrderId)
         {
             var order = _context.Orders.Find(OrderId);
             if (order == null)
@@ -95,6 +95,7 @@ namespace Postieri.Services
                 return true;
             }
         }
+
         public List<Order> GetOrderById(Guid OrderId)
         {
             var order = _context.Orders.Where(n => n.OrderId == OrderId).ToList();
