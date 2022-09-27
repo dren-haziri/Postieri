@@ -2,6 +2,7 @@
 {
     public class ServiceResponse<T>
     {
+        public Guid IDs { get; set; }
         public T? Data { get; set; }
         public bool Success { get; set; } = true;
         public string Message { get; set; } = string.Empty;
