@@ -14,6 +14,8 @@ using Postieri.DTO;
 using Postieri.Models;
 namespace Postieri.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class BusinessIntegrationController :ControllerBase
         
     {
@@ -29,17 +31,15 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("AddClientOrder")]
-        public async Task<ActionResult<string>> AddClientOrder(ClientOrderDto request, string jwt)
-        {
-            //decryp
-            //var convertjwt to normal and check if its valid
-            var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == jwt).FirstOrDefault();
-            //var businestoken = _context.Bussinesses.DistinctBy(x => x.BusinessToken).ToList();
+        public async Task<ActionResult<string>> AddClientOrder(ClientOrderDto request)
+        { 
+
+            var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == request.JWT).FirstOrDefault();
             if (bussinesExists == null)
             {
                 return BadRequest("token not found");
             }
-            clientOrder.CompanyToken = jwt;
+            clientOrder.CompanyToken = request.JWT;
             clientOrder.ProductId = request.ProductId;
             clientOrder.Date = request.Date;
             clientOrder.Address = request.Address;
@@ -56,6 +56,8 @@ namespace Postieri.Controllers
         public async Task<ActionResult<string>> SaveBusiness(BusinessDto request)
         {
             business.BusinessName = request.BusinessName;
+            business.Email = request.Email;
+            business.PhoneNumber = request.PhoneNumber;
             business.BusinessToken = CreateToken(business);
 
             if (business.BusinessName != request.BusinessName)
@@ -73,7 +75,7 @@ namespace Postieri.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, b.BusinessName),
-
+                new Claim(ClaimTypes.Email, b.Email)          
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
