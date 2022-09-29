@@ -21,9 +21,8 @@ namespace Postieri.Validators
         {
             DateTime currentYear = DateTime.Now;
             DateTime orderDate = date;
-            bool monthDay = orderDate.Month < 1  || orderDate.Day > 31  ;
 
-            if (orderDate <= currentYear && orderDate.Year > (currentYear.Year - 120) && monthDay  )
+            if (orderDate <= currentYear && orderDate.Year > (currentYear.Year - 120))
             {
               
                 return true;

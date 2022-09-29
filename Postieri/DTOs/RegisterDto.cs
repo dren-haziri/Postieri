@@ -15,7 +15,7 @@ namespace Postieri.DTOs
         
         public string CompanyName { get; set; }
         
-        public string RoleName { get; set; }
+        //public string RoleName { get; set; }
         
         public string PhoneNumber { get; set; }
     }

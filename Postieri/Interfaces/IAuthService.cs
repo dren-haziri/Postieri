@@ -1,4 +1,5 @@
-﻿using Postieri.Services;
+﻿using Postieri.Models;
+using Postieri.Services;
 
 namespace Postieri.Interfaces
 {
@@ -12,6 +13,7 @@ namespace Postieri.Interfaces
         Task<bool> UserExists(string email);
         Task<ServiceResponse<string>> Suspend(string email);
         Task<ServiceResponse<string>> Unsuspend(string email);
-
+        Task<ServiceResponse<string>> AssignRole(string email, Guid roleId);
+        Task<ServiceResponse<string>> RevokeRole(string email);
     }
 }
