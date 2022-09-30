@@ -26,12 +26,12 @@ namespace ClientTesting
             clientOrder.Date = DateTime.Parse("2022-09-23T15:15:51+00:00");
             clientOrder.Address = "Kosovo";
             clientOrder.Phone = 044123321;
-            clientOrder.Email = "reshaniflorentinaTest@gmail.com";
+            clientOrder.Email = "reshaniflorentinaTest2@gmail.com";
             clientOrder.Location = "Ferizaj";
             clientOrder.Price = 10;
             clientOrder.OrderedOn = DateTime.Parse("2022-09-23T15:15:51+00:00");
 
-            HttpResponseMessage httpResponseMessage = httpClient.PostAsJsonAsync("https://localhost:44344/api/BusinessIntegration/AddClientOrder", clientOrder).Result;
+            HttpResponseMessage httpResponseMessage = httpClient.PostAsJsonAsync("https://localhost:7134/api/BusinessIntegration", clientOrder).Result;
             Console.WriteLine("successfully added a new order");
 
         }

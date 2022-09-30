@@ -12,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using Postieri.Data;
 using Postieri.DTO;
 using Postieri.Models;
+using Postieri.Services;
+
 namespace Postieri.Controllers
 {
     [Route("api/[controller]")]
@@ -19,74 +21,24 @@ namespace Postieri.Controllers
     public class BusinessIntegrationController :ControllerBase
         
     {
-        public Business business = new Business();
-        public ClientOrder clientOrder = new ClientOrder();
+        private readonly IBusinessIntegrationService _businessIntegration;
 
-        private readonly DataContext _context;
-        private readonly IConfiguration _configuration;
-        public BusinessIntegrationController(DataContext context, IConfiguration configuration)
+        public BusinessIntegrationController(IBusinessIntegrationService businessIntegrationService)
         {
-            _context = context;
-            _configuration = configuration;
+            _businessIntegration = businessIntegrationService;
         }
 
-        [HttpPost("AddClientOrder")]
+        [HttpPost]
         public async Task<ActionResult<string>> AddClientOrder(ClientOrderDto request)
-        { 
-
-            var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == request.JWT).FirstOrDefault();
-            if (bussinesExists == null)
-            {
-                return BadRequest("token not found");
-            }
-            clientOrder.CompanyToken = request.JWT;
-            clientOrder.ProductId = request.ProductId;
-            clientOrder.Date = request.Date;
-            clientOrder.Address = request.Address;
-            clientOrder.Phone = request.Phone;
-            clientOrder.Email = request.Email;
-            clientOrder.Location = request.Location;
-            clientOrder.Price = request.Price;
-            _context.ClientOrders.Add(clientOrder);
-            await _context.SaveChangesAsync();
-            //return Ok("order successfully created  with the id as followos:"+order.OrderId);
-            return Ok(clientOrder);
+        {
+            _businessIntegration.AddClientOrder(request);
+            return Ok();
         }
         [HttpPost("SaveBusiness")]
         public async Task<ActionResult<string>> SaveBusiness(BusinessDto request)
         {
-            business.BusinessName = request.BusinessName;
-            business.Email = request.Email;
-            business.PhoneNumber = request.PhoneNumber;
-            business.BusinessToken = CreateToken(business);
-
-            if (business.BusinessName != request.BusinessName)
-            {
-                return BadRequest("not found");
-            }
-
-            string token = CreateToken(business);
-            _context.Businesses.Add(business);
-            await _context.SaveChangesAsync();
-            return Ok(token);
-        }
-        private string CreateToken(Business b)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, b.BusinessName),
-                new Claim(ClaimTypes.Email, b.Email)          
-            };
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds
-                );
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
+            _businessIntegration.SaveBusiness(request);
+            return Ok();
         }
     }
 }
