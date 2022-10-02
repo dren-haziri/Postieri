@@ -306,13 +306,70 @@ namespace Postieri.Services
                     Message = "Role does not exist."
                 };
             }
-
+            
             user.RoleId = roleId;
             user.RoleName = role.RoleName;
+
+            if (role.RoleName == "Courier")
+            {
+                
+                Courier courier = new Courier()
+                {
+                    UserId = user.UserId,
+                    CompanyName = user.CompanyName,
+                    RoleName = user.RoleName,
+                    PasswordSalt = user.PasswordSalt,
+                    Username = user.Username,
+                    Email = user.Email,
+                    VehicleId = GetDefaultAvailableVehicle(),
+                    PasswordHash = user.PasswordHash,
+                    PhoneNumber = user.PhoneNumber,
+                    RoleId = user.RoleId,
+                    RegisterDate = user.RegisterDate,
+                    IsActive = user.IsActive,
+                    ExpirationDate = user.ExpirationDate,
+                    VerifiedAt = user.VerifiedAt,
+                    IsSuspended = user.IsSuspended,
+                    VerificationToken = user.VerificationToken,
+                    PasswordResetToken = user.PasswordResetToken,
+                    ResetTokenExpires = user.ResetTokenExpires,
+                    
+
+                };
+                _context.Users.Remove(user);
+                _context.Users.Add(courier);
+
+            }else if (role.RoleName != "Courier")
+            {
+                User _user = new User()
+                {
+                    UserId = user.UserId,
+                    CompanyName = user.CompanyName,
+                    RoleName = user.RoleName,
+                    PasswordSalt = user.PasswordSalt,
+                    Username = user.Username,
+                    Email = user.Email,                
+                    PasswordHash = user.PasswordHash,
+                    PhoneNumber = user.PhoneNumber,
+                    RoleId = user.RoleId,
+                    RegisterDate = user.RegisterDate,
+                    IsActive = user.IsActive,
+                    ExpirationDate = user.ExpirationDate,
+                    VerifiedAt = user.VerifiedAt,
+                    IsSuspended = user.IsSuspended,
+                    VerificationToken = user.VerificationToken,
+                    PasswordResetToken = user.PasswordResetToken,
+                    ResetTokenExpires = user.ResetTokenExpires,
+                    
+
+
+                };
+                _context.Users.Remove(user);
+                _context.Users.Add(_user);
+            }
             user.VerificationToken = CreateToken(user); //new jwt needed bc the ClaimTypes.Role has to change regarding the new Role assignment
-
             await _context.SaveChangesAsync();
-
+           
             return new ServiceResponse<string> 
             { 
                 IDs = roleId, 
@@ -334,6 +391,33 @@ namespace Postieri.Services
                     Message = "User not found."
                 };
             }
+            if (user.RoleName == "Courier")
+            {
+                User _user = new User()
+                {
+                    UserId = user.UserId,
+                    CompanyName = user.CompanyName,
+                    RoleName = "NoRole",
+                    PasswordSalt = user.PasswordSalt,
+                    Username = user.Username,
+                    Email = user.Email,
+                    PasswordHash = user.PasswordHash,
+                    PhoneNumber = user.PhoneNumber,
+                    RoleId = null,
+                    RegisterDate = user.RegisterDate,
+                    IsActive = user.IsActive,
+                    ExpirationDate = user.ExpirationDate,
+                    VerifiedAt = user.VerifiedAt,
+                    IsSuspended = user.IsSuspended,
+                    VerificationToken = user.VerificationToken,
+                    PasswordResetToken = user.PasswordResetToken,
+                    ResetTokenExpires = user.ResetTokenExpires,
+
+
+                };
+                _context.Users.Remove(user);
+                _context.Users.Add(_user);
+            }
 
             user.RoleId = null;
             user.RoleName = "NoRole";
@@ -346,6 +430,11 @@ namespace Postieri.Services
                 Success = true, 
                 Message = "Role revoked successfully" 
             };
+        }
+
+        private int GetDefaultAvailableVehicle()
+        {
+            return _context.Vehicles.Where(x => x.IsAvailable == true && x.HasDefect == false).FirstOrDefault().Id;
         }
     }
 }
