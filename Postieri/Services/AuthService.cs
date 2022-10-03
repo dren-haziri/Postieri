@@ -1,7 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Postieri.Data;
+using Postieri.Models;
+using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -39,7 +45,7 @@ namespace Postieri.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<int> { Data = user.UserId, Message = "Registration successful!" };
+            return new ServiceResponse<int> { IDs = user.UserId, Message = "Registration successful!" };
         }
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
@@ -47,6 +53,7 @@ namespace Postieri.Services
             var response = new ServiceResponse<string>();
             var user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+
             if (user == null)
             {
                 response.Success = false;
@@ -67,9 +74,15 @@ namespace Postieri.Services
                 response.Success = false;
                 response.Message = "User is suspended.";
             }
+            else if (user.RoleName == "NoRole")
+            {
+                response.Success = false;
+                response.Message = "User needs to be assigned a role.";
+            }
             else
             {
-                response.Data = user.VerificationToken;
+                response.IDs = user.UserId;
+                response.Data = "Welcome " + user.Username;
                 response.Message = "Login successful!";
             }
 
@@ -88,6 +101,8 @@ namespace Postieri.Services
             }
             else
             {
+                response.IDs = user.UserId;
+                response.Data = user.VerificationToken;
                 response.Message = "Verification successful!";
 
                 user.VerifiedAt = DateTime.Now;
@@ -203,7 +218,7 @@ namespace Postieri.Services
             return jwt;
         }
 
-        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        public async Task<ServiceResponse<bool>> ChangePassword(Guid userId, string newPassword)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
@@ -241,8 +256,9 @@ namespace Postieri.Services
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
+                IDs = user.UserId,
                 Success = true,
-                Message = "User was suspended"
+                Message = "User has been suspended"
             };
         }
 
@@ -262,10 +278,74 @@ namespace Postieri.Services
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
+                IDs = user.UserId,
                 Success = true,
-                Message = "User was unsuspended"
+                Message = "User has been unsuspended"
             };
         }
 
+        public async Task<ServiceResponse<string>> AssignRole(string email, Guid roleId)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            var role = _context.Roles.Find(roleId);
+
+            if (user == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+            if (role == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "Role does not exist."
+                };
+            }
+
+            user.RoleId = roleId;
+            user.RoleName = role.RoleName;
+            user.VerificationToken = CreateToken(user); //new jwt needed bc the ClaimTypes.Role has to change regarding the new Role assignment
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<string> 
+            { 
+                IDs = roleId, 
+                Data = user.Username + " has been assigned as a " + user.RoleName, 
+                Success = true, 
+                Message = "Role updated successfully" 
+            };
+        }
+
+        public async Task<ServiceResponse<string>> RevokeRole(string email)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+
+            user.RoleId = null;
+            user.RoleName = "NoRole";
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<string> 
+            { 
+                IDs = user.UserId,
+                Data = user.Username + " has been revoked of their role",
+                Success = true, 
+                Message = "Role revoked successfully" 
+            };
+        }
     }
 }
