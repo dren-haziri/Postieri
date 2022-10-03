@@ -10,11 +10,8 @@ namespace Postieri.Services
 {
     public class BusinessIntegrationService : IBusinessIntegrationService
     {
-        public Business business = new Business();
-        public ClientOrder clientOrder = new ClientOrder();
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-
         public BusinessIntegrationService(DataContext context, IConfiguration configuration)
         {
             _context = context;
@@ -22,46 +19,51 @@ namespace Postieri.Services
         }
        public bool AddClientOrder(ClientOrderDto request)
         {
+            var clientOrder = new ClientOrder()
+            {
+               CompanyToken = request.JWT,
+               ProductId = request.ProductId,
+               Date = request.Date,
+               Address = request.Address,
+               Phone = request.Phone,
+               Email = request.Email,
+               Location = request.Location,
+               Price = request.Price,
+            };
             var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == request.JWT).FirstOrDefault();
-            clientOrder.CompanyToken = request.JWT;
-            clientOrder.ProductId = request.ProductId;
-            clientOrder.Date = request.Date;
-            clientOrder.Address = request.Address;
-            clientOrder.Phone = request.Phone;
-            clientOrder.Email = request.Email;
-            clientOrder.Location = request.Location;
-            clientOrder.Price = request.Price;
             if (bussinesExists == null)
             {
                 return false;
             }
-            else
-            {  _context.ClientOrders.Add(clientOrder);
+            _context.ClientOrders.Add(clientOrder);
                 _context.SaveChangesAsync();
-                return true;
-            }       
+                return true;      
         }
 
        public bool SaveBusiness(BusinessDto request)
         {
+            var business = new Business(){};
+            var alreadyExist = _context.Businesses.Where(x => x.BusinessName == request.BusinessName & x.Email == request.Email & x.PhoneNumber == request.PhoneNumber).FirstOrDefault();
             business.BusinessName = request.BusinessName;
             business.Email = request.Email;
             business.PhoneNumber = request.PhoneNumber;
             business.BusinessToken = CreateToken(business);
-
             if (business.BusinessName == null || business.BusinessName == "")
+            {
+                return false;
+            }
+            else if (alreadyExist != null)
             {
                 return false;
             }
             else
             {
-               string token = CreateToken(business);
-               _context.Businesses.Add(business);
-               _context.SaveChangesAsync();
-               return true;
+                string token = CreateToken(business);
+                _context.Businesses.Add(business);
+                _context.SaveChangesAsync();
+                return true;
             }
         }
-
         private string CreateToken(Business b)
         {
             List<Claim> claims = new List<Claim>
@@ -77,7 +79,7 @@ namespace Postieri.Services
                 signingCredentials: creds
                 );
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
+           
             return jwt;
         }
     }
