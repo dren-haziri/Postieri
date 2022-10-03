@@ -36,8 +36,8 @@ builder.Services.AddCors(options =>
                              options.AddPolicy(name: MyAllowSpecificOrigins,
                                               policy => 
                                                {
-                                                   policy.WithOrigins("http://example.com", 
-                                                                     "http://postieri.com");
+                                                   policy.WithOrigins("https://localhost:3000/", "http://localhost:5173/").AllowAnyHeader()
+                                                          .AllowAnyMethod();
                                                });
                          });
 
@@ -116,6 +116,14 @@ if (app.Environment.IsDevelopment())
   app.UseSwaggerUI();
 }
 app.UseCors(MyAllowSpecificOrigins);
+ app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
