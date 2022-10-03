@@ -24,11 +24,22 @@ using System.Net.WebSockets;
 using System.Net;
 using System.Text;
 
+
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
-
+builder.Services.AddCors(options => 
+                         {
+                             options.AddPolicy(name: MyAllowSpecificOrigins,
+                                              policy => 
+                                               {
+                                                   policy.WithOrigins("http://example.com", 
+                                                                     "http://postieri.com");
+                                               });
+                         });
 
 
 builder.Services.AddControllers();
@@ -104,7 +115,7 @@ if (app.Environment.IsDevelopment())
   app.UseSwagger();
   app.UseSwaggerUI();
 }
-
+app.UseCors(MyAllowSpecificOrigins);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
