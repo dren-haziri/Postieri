@@ -22,6 +22,7 @@ namespace Postieri.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+
             modelBuilder.Entity("Postieri.Models.Dimension", b =>
                 {
                     b.Property<Guid>("Id")
@@ -98,7 +99,6 @@ namespace Postieri.Migrations
 
             modelBuilder.Entity("Postieri.Models.Role", b =>
                 {
-                    b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
