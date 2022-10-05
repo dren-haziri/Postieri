@@ -35,11 +35,11 @@ namespace Postieri.Controllers
         {
             var deliceryPrice = await _context.DeliveryPrices.FindAsync(request.DeliveryPriceId);
             if (deliceryPrice == null)
-                return BadRequest("Calculate price not found");
+                return BadRequest("Calculated price not found");
             deliceryPrice.CountryTo = request.CountryTo;
             deliceryPrice.CityTo = request.CityTo;
             deliceryPrice.PostCodeTo = request.PostCodeTo;
-            deliceryPrice.DimensionId = request.DimensionId;
+            deliceryPrice.Dimension = request.Dimension;
             deliceryPrice.TotalPrice = request.TotalPrice;
 
             await _context.SaveChangesAsync();
@@ -51,7 +51,7 @@ namespace Postieri.Controllers
         {
             var deliceryPrice = await _context.DeliveryPrices.FindAsync(DeliveryPriceId);
             if (deliceryPrice == null)
-                return BadRequest("Calculate price not found");
+                return BadRequest("Calculated price not found");
 
             _context.DeliveryPrices.Remove(deliceryPrice);
             await _context.SaveChangesAsync();
