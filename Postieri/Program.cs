@@ -43,6 +43,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ILiveAgentService, LiveAgentService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -57,7 +59,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddSingleton<WebSocketServerConnectionManager>();
-builder.Services.AddSingleton<ILiveChatHandler, LiveChatHandler>();
 
 var app = builder.Build();
 
@@ -96,7 +97,7 @@ app.Use(async (context, next) =>
     }
 });
 
-
+//-----
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Postieri.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace Postieri
         public DateTime? VerifiedAt { get; set; }
         public string? PasswordResetToken { get; set; }
         public DateTime? ResetTokenExpires { get; set; }
+
+        //public virtual IList<LiveAgent> LiveAgents { get; set; }
 
     }
 }

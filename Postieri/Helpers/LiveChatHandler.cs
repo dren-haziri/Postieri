@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Postieri.Handlers
 {
-    public class LiveChatHandler : ILiveChatHandler,IDisposable
+    public class LiveChatHandler 
     {
         private readonly IConnection _conn;
         private readonly IModel _channel;
@@ -37,8 +37,8 @@ namespace Postieri.Handlers
             var factory = new ConnectionFactory()
             {
                 HostName = "localhost",
-                UserName = "admin",
-                Password = "admin123",
+                UserName = "guest",
+                Password = "guest",
                 Port = 15672,
                 VirtualHost = "/",
             };
@@ -73,7 +73,7 @@ namespace Postieri.Handlers
                 // {"TaskName":"Demo", "TaskType":1}
                 var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<MqMsg>(content);
 
-                var workIds = LiveAgent.GetByTaskType(msg.TaskType);
+              var workIds = LiveAgent.GetByTaskType(msg.TaskType);
                 var onlineWorkerIds = _sockets.Keys.Intersect(workIds).ToList();
                 if (onlineWorkerIds == null || !onlineWorkerIds.Any())
                 {
@@ -117,7 +117,7 @@ namespace Postieri.Handlers
                     }
                     else
                     {
-                        Console.WriteLine("Not found a worker");
+                        Console.WriteLine("Worker not found");
                     }
                 }
             };
@@ -187,6 +187,5 @@ namespace Postieri.Handlers
             _channel?.Dispose();
             _conn?.Dispose();
         }
-    
     }
 }
