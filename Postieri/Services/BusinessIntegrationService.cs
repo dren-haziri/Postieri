@@ -17,7 +17,7 @@ namespace Postieri.Services
             _context = context;
             _configuration = configuration;
         }
-        public bool AddClientOrder(ClientOrderDto request)
+        public bool AddOrder(OrderDto request)
         {
 
             if (request == null)
@@ -25,7 +25,7 @@ namespace Postieri.Services
                 return false;
             }
 
-            var clientOrder = new ClientOrder()
+            var Order = new Order()
             {
                 CompanyToken = request.JWT,
                 ProductId = request.ProductId,
@@ -33,7 +33,6 @@ namespace Postieri.Services
                 Address = request.Address,
                 Phone = request.Phone,
                 Email = request.Email,
-                Location = request.Location,
                 Price = request.Price,
             };
 
@@ -43,7 +42,7 @@ namespace Postieri.Services
                 return false;
             }
 
-            _context.ClientOrders.Add(clientOrder);
+            _context.Orders.Add(Order);
             _context.SaveChangesAsync();
             return true;
         }

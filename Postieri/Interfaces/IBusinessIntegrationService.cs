@@ -9,7 +9,7 @@ namespace Postieri.Interfaces
     {
        
       bool SaveBusiness(BusinessDto request);
-      bool AddClientOrder(ClientOrderDto request);
+      bool AddOrder(OrderDto request);
      
     }
 }

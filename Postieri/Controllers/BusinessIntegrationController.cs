@@ -29,9 +29,9 @@ namespace Postieri.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> AddClientOrder(ClientOrderDto request)
+        public async Task<ActionResult<string>> AddOrder(OrderDto request)
         {
-            _businessIntegration.AddClientOrder(request);
+            _businessIntegration.AddOrder(request);
             return Ok();
         }
         [HttpPost("SaveBusiness")]
