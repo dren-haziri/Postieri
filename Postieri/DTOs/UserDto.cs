@@ -12,10 +12,10 @@
         public string CompanyName { get; set; }
 
         public Guid RoleId { get; set; }
-        
+        public bool IsSuspended { get; set; }
 
         public string PhoneNumber { get; set; }
-        public string Status { get; set; }
+        
 
 
 

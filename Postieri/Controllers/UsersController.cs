@@ -56,12 +56,12 @@ namespace Postieri.Controllers
                
                 _user.PhoneNumber = user.PhoneNumber;
                 _user.Email = user.Email;
-                _user.Status=user.Status;
+                _user.IsSuspended = user.IsSuspended;
+                _user.Status = user.IsSuspended ?  "Suspended" : "Active" ;
                 _user.Username = user.Username;
                 _user.CompanyName = user.CompanyName;           
                 _user.RoleId = user.RoleId;
                 var role = _context.Roles.FirstOrDefault(n => n.RoleId == user.RoleId).RoleName;
-
                 _user.RoleName = role;
                
         
