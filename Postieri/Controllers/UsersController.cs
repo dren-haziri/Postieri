@@ -42,6 +42,37 @@ namespace Postieri.Controllers
             return user;
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(Guid id, UserDto user)
+        {
+            if (id != user.UserId)
+            {
+                return BadRequest();
+            }
+
+            var _user = _context.Users.FirstOrDefault(n => n.UserId == id);
+            if (_user != null)
+            {
+               
+                _user.PhoneNumber = user.PhoneNumber;
+                _user.Email = user.Email;
+                _user.Status=user.Status;
+                _user.Username = user.Username;
+                _user.CompanyName = user.CompanyName;           
+                _user.RoleId = user.RoleId;
+                var role = _context.Roles.FirstOrDefault(n => n.RoleId == user.RoleId).RoleName;
+
+                _user.RoleName = role;
+               
+        
+
+                _context.SaveChanges();
+            }
+
+            return NoContent();
+        }
+
+
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)

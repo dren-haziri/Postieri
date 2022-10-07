@@ -253,6 +253,7 @@ namespace Postieri.Services
                 };
             }
             user.IsSuspended = true;
+            user.Status = "Suspended";
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
@@ -275,6 +276,7 @@ namespace Postieri.Services
                 };
             }
             user.IsSuspended = false;
+            user.Status = "Active";
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
