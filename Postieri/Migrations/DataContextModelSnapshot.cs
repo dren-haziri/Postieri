@@ -99,8 +99,9 @@ namespace Postieri.Migrations
 
             modelBuilder.Entity("Postieri.Models.Role", b =>
                 {
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("RoleId")
+                   .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
