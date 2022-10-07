@@ -10,52 +10,36 @@ namespace Postieri.Controllers
     [ApiController]
     public class DeliveryPriceController : ControllerBase
     {
-        private readonly DataContext _context;
-        public DeliveryPriceController(DataContext context)
+        private readonly IDeliveryPriceService _deliveryPriceService;
+        public DeliveryPriceController(IDeliveryPriceService deliveryPriceService)
         {
-            _context = context;
-
+            _deliveryPriceService = deliveryPriceService;
         }
         [HttpGet]
         public async Task<ActionResult<List<DeliveryPrice>>> Get()
         {
-            return Ok(await _context.DeliveryPrices.ToListAsync());
+            return Ok(await _deliveryPriceService.Get());
         }
 
         [HttpPost]
         public async Task<ActionResult<List<DeliveryPrice>>> AddCalculatePrice(DeliveryPrice request)
         {
-            _context.DeliveryPrices.Add(request);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.DeliveryPrices.ToListAsync());
+            _deliveryPriceService.AddCalculatePrice(request);
+            return Ok(await _deliveryPriceService.Get());
         }
 
         [HttpPut]
         public async Task<ActionResult<List<DeliveryPrice>>> UpdateCalculatePrice(DeliveryPrice request)
         {
-            var deliceryPrice = await _context.DeliveryPrices.FindAsync(request.DeliveryPriceId);
-            if (deliceryPrice == null)
-                return BadRequest("Calculated price not found");
-            deliceryPrice.CountryTo = request.CountryTo;
-            deliceryPrice.CityTo = request.CityTo;
-            deliceryPrice.PostCodeTo = request.PostCodeTo;
-            deliceryPrice.Dimension = request.Dimension;
-            deliceryPrice.TotalPrice = request.TotalPrice;
-
-            await _context.SaveChangesAsync();
-            return Ok(await _context.DeliveryPrices.ToListAsync());
+            _deliveryPriceService.UpdateCalculatePrice(request);
+            return Ok(await _deliveryPriceService.Get());
         }
 
         [HttpDelete]
         public async Task<ActionResult<List<DeliveryPrice>>> Delete(Guid DeliveryPriceId)
         {
-            var deliceryPrice = await _context.DeliveryPrices.FindAsync(DeliveryPriceId);
-            if (deliceryPrice == null)
-                return BadRequest("Calculated price not found");
-
-            _context.DeliveryPrices.Remove(deliceryPrice);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.DeliveryPrices.ToListAsync());
+            _deliveryPriceService.Delete(DeliveryPriceId);
+            return Ok(await _deliveryPriceService.Get());
         }
     }
 }

@@ -80,6 +80,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IExportDataPdfService, ExportDataPdfService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDeliveryPriceService, DeliveryPriceService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
