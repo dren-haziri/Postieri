@@ -65,9 +65,9 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("verify")]
-        public async Task<ActionResult<ServiceResponse<string>>> Verify(UserVerificationDto request)
+        public async Task<ActionResult<ServiceResponse<string>>> Verify(string request)
         {
-            var response = await _authService.Verify(request.VerificationToken);
+            var response = await _authService.Verify(request);
             if (!response.Success)
             {
                 return BadRequest(response);
