@@ -22,7 +22,14 @@ namespace Postieri.Data
         public DbSet<Business> Businesses { get; set; }
         public DbSet<ClientOrder> ClientOrders { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Courier> Couriers { get; set; }
+        
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Courier>().ToTable("Couriers");
+
+        }
 
     }
 }
