@@ -23,6 +23,7 @@ using System.Text.Json.Serialization;
 using System.Net.WebSockets;
 using System.Net;
 using System.Text;
+using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -91,6 +92,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IExportDataPdfService, ExportDataPdfService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IBusinessIntegrationService, BusinessIntegrationService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
