@@ -20,7 +20,7 @@ namespace Postieri.Services
             var order = new Order()
             {
                 OrderId = request.OrderId,
-                ProductId = request.ProductId,
+                //ProductId = request.ProductId,
                 Date = request.Date,
                 OrderedOn = request.OrderedOn,
                 Price = request.Price,
@@ -61,7 +61,6 @@ namespace Postieri.Services
             else
             {
                 order.OrderId = request.OrderId;
-                order.ProductId = request.ProductId;
                 order.Date = request.Date;
                 order.OrderedOn = request.OrderedOn;
                 order.Price = request.Price;
@@ -103,7 +102,7 @@ namespace Postieri.Services
         }
         public bool OrderExists(Order request)
         {
-            bool alreadyExist = _context.Orders.Any(x => x.OrderId == request.OrderId || x.ProductId == request.ProductId);
+            bool alreadyExist = _context.Orders.Any(x => x.OrderId == request.OrderId);
             return alreadyExist;
         }
     }

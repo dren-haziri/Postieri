@@ -34,6 +34,17 @@ namespace Postieri.Controllers
             _businessIntegration.AddOrder(request);
             return Ok();
         }
+        [HttpPost("GetAllOrders")]
+        public ActionResult<List<Order>> GetAllOrders()
+        {
+           
+            return Ok(_businessIntegration.GetAllOrders());
+        }
+        [HttpGet("GetOrderById")]
+        public Order GetOrders(Guid id)
+        {
+            return _businessIntegration.GetOrders(id);
+        }
         [HttpPost("SaveBusiness")]
         public async Task<ActionResult<string>> SaveBusiness(BusinessDto request)
         {

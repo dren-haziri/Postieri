@@ -27,7 +27,7 @@ namespace ClientTesting
             clientOrder.Address = "Kosovo";
             clientOrder.Phone = 044123321;
             clientOrder.Email = "reshaniflorentinaTest2@gmail.com";
-            clientOrder.Price = 10;
+            //clientOrder.Price = 10;
             clientOrder.OrderedOn = DateTime.Parse("2022-09-23T15:15:51+00:00");
 
             HttpResponseMessage httpResponseMessage = httpClient.PostAsJsonAsync("https://localhost:7134/api/BusinessIntegration", clientOrder).Result;

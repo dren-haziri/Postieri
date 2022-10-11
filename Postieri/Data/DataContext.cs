@@ -21,6 +21,7 @@ namespace Postieri.Data
         public DbSet<Warehouse> Warehouse { get; set; }
         public DbSet<Business> Businesses { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Product> Products { get; set; }
 
 
     }

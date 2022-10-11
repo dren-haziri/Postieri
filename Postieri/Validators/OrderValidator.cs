@@ -16,7 +16,7 @@ namespace Postieri.Validators
             RuleFor(x => x.CourierId).NotEmpty().NotNull();
             RuleFor(x => x.Status).NotEmpty().NotNull();
             RuleFor(x => x.Date).NotNull().NotEmpty().Must(RuleBuilderValidationExtensions.BeAValidDate).WithMessage("Invalid {PropertyName}");
-            RuleFor(x => x.ProductId).NotEmpty().NotNull();
+           // RuleFor(x => x.ProductId).NotEmpty().NotNull();
             RuleFor(x => x.ManagerId).NotEmpty().NotNull();
             RuleFor(x => x.Sign).NotEmpty().NotNull();
             RuleFor(x => x.OrderedOn).Must(RuleBuilderValidationExtensions.BeAValidDate).WithMessage("Invalid {PropertyName}").NotEmpty().NotNull();

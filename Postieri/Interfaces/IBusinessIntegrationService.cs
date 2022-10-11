@@ -7,9 +7,12 @@ namespace Postieri.Interfaces
 {
     public interface IBusinessIntegrationService
     {
-       
-      bool SaveBusiness(BusinessDto request);
-      bool AddOrder(OrderDto request);
-     
+
+        bool SaveBusiness(BusinessDto request);
+        bool AddOrder(OrderDto request);
+        Order GetOrders(Guid id);
+        ActionResult<List<Order>> GetAllOrders();
+
+
     }
 }

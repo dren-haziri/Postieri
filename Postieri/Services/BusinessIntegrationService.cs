@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Postieri.Data;
 using Postieri.DTO;
+using Postieri.Mappings;
 using Postieri.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,10 +15,27 @@ namespace Postieri.Services
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        public BusinessIntegrationService(DataContext context, IConfiguration configuration)
+        private readonly IMapper _mapper;
+        public BusinessIntegrationService(DataContext context, IConfiguration configuration, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
+            _mapper = mapper;
+        }
+
+        public Order GetOrders(Guid id)
+        {
+
+            var ordersFromDb = _context.Orders.Where(n => n.OrderId == id).Include(w => w.Products).FirstOrDefault();
+
+            var orders = _context.Orders.FindAsync(id);
+            var orderToReturn = _mapper.Map<Order>(ordersFromDb);
+            return orderToReturn;
+        }
+        public ActionResult<List<Order>> GetAllOrders()
+        {
+            var orders = _context.Orders.ToList();
+            return orders;
         }
         public bool AddOrder(OrderDto request)
         {
@@ -25,15 +45,23 @@ namespace Postieri.Services
                 return false;
             }
 
+
             var Order = new Order()
             {
                 CompanyToken = request.JWT,
-                ProductId = request.ProductId,
                 Date = request.Date,
+                Products = new Product
+                {
+                    Price = request.Price,
+                    Length = request.Length,
+                    Width = request.Width,
+                    Name = request.Name,
+                    Height = request.Height
+                },
                 Address = request.Address,
                 Phone = request.Phone,
                 Email = request.Email,
-                Price = request.Price,
+
             };
 
             var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == request.JWT).FirstOrDefault();
