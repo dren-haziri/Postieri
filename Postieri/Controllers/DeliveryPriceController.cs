@@ -16,30 +16,23 @@ namespace Postieri.Controllers
             _deliveryPriceService = deliveryPriceService;
         }
         [HttpGet]
-        public async Task<ActionResult<List<DeliveryPrice>>> Get()
+        public ActionResult<List<DeliveryPrice>> Get()
         {
-            return Ok(await _deliveryPriceService.Get());
+            return Ok(_deliveryPriceService.GetCalculations());
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<DeliveryPrice>>> AddCalculatePrice(DeliveryPrice request)
+        public ActionResult<List<DeliveryPrice>> AddCalculatePrice(DeliveryPrice request)
         {
-            _deliveryPriceService.AddCalculatePrice(request);
-            return Ok(await _deliveryPriceService.Get());
-        }
-
-        [HttpPut]
-        public async Task<ActionResult<List<DeliveryPrice>>> UpdateCalculatePrice(DeliveryPrice request)
-        {
-            _deliveryPriceService.UpdateCalculatePrice(request);
-            return Ok(await _deliveryPriceService.Get());
+            _deliveryPriceService.AddCalculation(request);
+            return Ok(_deliveryPriceService.GetCalculations());
         }
 
         [HttpDelete]
-        public async Task<ActionResult<List<DeliveryPrice>>> Delete(Guid DeliveryPriceId)
+        public ActionResult<List<DeliveryPrice>> Delete(Guid DeliveryPriceId)
         {
-            _deliveryPriceService.Delete(DeliveryPriceId);
-            return Ok(await _deliveryPriceService.Get());
+            _deliveryPriceService.DeleteCalculation(DeliveryPriceId);
+            return Ok(_deliveryPriceService.GetCalculations());
         }
     }
 }

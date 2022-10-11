@@ -4,9 +4,8 @@ namespace Postieri.Interfaces
 {
     public interface IDeliveryPriceService
     {
-        Task<List<DeliveryPrice>> Get();
-        Task<List<DeliveryPrice>> AddCalculatePrice(DeliveryPrice request);
-        Task<List<DeliveryPrice>> UpdateCalculatePrice(DeliveryPrice request);
-        Task<List<DeliveryPrice>> Delete(Guid DeliveryPriceId);
+        List<DeliveryPrice> GetCalculations();
+        bool AddCalculation(DeliveryPrice request);
+        bool DeleteCalculation(Guid DeliveryPriceId);
     }
 }

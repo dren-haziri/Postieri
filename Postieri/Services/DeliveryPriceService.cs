@@ -11,35 +11,91 @@ namespace Postieri.Services
         {
             _context = context;
         }
-        public async Task<List<DeliveryPrice>> Get()
+        public List<DeliveryPrice> GetCalculations()
         {
-            return await _context.DeliveryPrices.ToListAsync();
+            return _context.DeliveryPrices.ToList();
         }
-        public async Task<List<DeliveryPrice>> AddCalculatePrice(DeliveryPrice request)
+        public bool AddCalculation(DeliveryPrice request)
         {
-            _context.DeliveryPrices.Add(request);
-            await _context.SaveChangesAsync();
-            return await _context.DeliveryPrices.ToListAsync();
-        }
-        public async Task<List<DeliveryPrice>> UpdateCalculatePrice(DeliveryPrice request)
-        {
-            var deliceryPrice = await _context.DeliveryPrices.FindAsync(request.DeliveryPriceId);
-            deliceryPrice.CountryTo = request.CountryTo;
-            deliceryPrice.CityTo = request.CityTo;
-            deliceryPrice.PostCodeTo = request.PostCodeTo;
-            deliceryPrice.Dimension = request.Dimension;
-            deliceryPrice.TotalPrice = request.TotalPrice;
+            var deliveryPrice = new DeliveryPrice()
+            {
+                DeliveryPriceId = request.DeliveryPriceId,
+                CountryTo = request.CountryTo,
+                CityTo = request.CityTo,
+                PostCodeTo = request.PostCodeTo,
+                Dimension = request.Dimension,
+                TotalPrice = request.TotalPrice
+            };
+            if (deliveryPrice == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (deliveryPrice.CountryTo.ToUpper() == "Kosove".ToUpper())
+                {
+                    deliveryPrice.TotalPrice = 2;
+                }
+                else if (deliveryPrice.CountryTo.ToUpper() == "Shqiperi".ToUpper())
+                {
+                    deliveryPrice.TotalPrice = 3;
+                }
+                else if (deliveryPrice.CountryTo.ToUpper() == "Maqedoni".ToUpper())
+                {
+                    deliveryPrice.TotalPrice = 4;
+                }
+                else if (deliveryPrice.CountryTo.ToUpper() == "Montenegro".ToUpper())
+                {
+                    deliveryPrice.TotalPrice = 4;
+                }
+                else
+                {
+                    deliveryPrice.TotalPrice = 20;
+                }
 
-            await _context.SaveChangesAsync();
-            return await _context.DeliveryPrices.ToListAsync();
+                if (deliveryPrice.Dimension.name.ToLower() == "largepackage" || deliveryPrice.Dimension.name.ToLower() == "large")
+                {
+                    deliveryPrice.TotalPrice *= 3;
+                }
+                else if (deliveryPrice.Dimension.name.ToLower() == "mediumpackage" || deliveryPrice.Dimension.name.ToLower() == "medium")
+                {
+                    deliveryPrice.TotalPrice *= 2;
+                }
+                else if (deliveryPrice.Dimension.name.ToLower() == "smallpackage" || deliveryPrice.Dimension.name.ToLower() == "small")
+                {
+                    deliveryPrice.TotalPrice *= 1;
+                }
+                else
+                {
+                    deliveryPrice.TotalPrice *= 5;
+                }
+                _context.DeliveryPrices.Add(deliveryPrice);
+                _context.SaveChanges();
+                return true;
+            }
         }
-        public async Task<List<DeliveryPrice>> Delete(Guid DeliveryPriceId)
+        public bool DeleteCalculation(Guid DeliveryPriceId)
         {
-            var deliceryPrice = await _context.DeliveryPrices.FindAsync(DeliveryPriceId);
-
-            _context.DeliveryPrices.Remove(deliceryPrice);
-            await _context.SaveChangesAsync();
-            return await _context.DeliveryPrices.ToListAsync();
+            var deliveryPrice = _context.DeliveryPrices.Find(DeliveryPriceId);
+            if (deliveryPrice == null)
+            {
+                return false;
+            }
+            else if (!CalculationExists(deliveryPrice))
+            {
+                return false;
+            }
+            else
+            {
+                _context.DeliveryPrices.Remove(deliveryPrice);
+                _context.SaveChanges();
+                return true;
+            }
+        }
+        public bool CalculationExists(DeliveryPrice request)
+        {
+            bool alreadyExist = _context.DeliveryPrices.Any(x => x.DeliveryPriceId == request.DeliveryPriceId);
+            return alreadyExist;
         }
     }
 }
