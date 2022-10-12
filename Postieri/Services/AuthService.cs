@@ -84,6 +84,7 @@ namespace Postieri.Services
                 response.IDs = user.UserId;
                 response.Data = "Welcome " + user.Username;
                 response.Message = "Login successful!";
+                response.Token = user.VerificationToken;
             }
 
             return response;
@@ -253,6 +254,7 @@ namespace Postieri.Services
                 };
             }
             user.IsSuspended = true;
+            user.Status = "Suspended";
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
@@ -275,6 +277,7 @@ namespace Postieri.Services
                 };
             }
             user.IsSuspended = false;
+            user.Status = "Active";
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
