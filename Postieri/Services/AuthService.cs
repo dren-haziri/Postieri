@@ -311,6 +311,33 @@ namespace Postieri.Services
             user.RoleName = role.RoleName;
             user.VerificationToken = CreateToken(user); //new jwt needed bc the ClaimTypes.Role has to change regarding the new Role assignment
 
+            if (role.RoleName == "LiveAgent")
+            {
+
+                LiveAgent agent = new LiveAgent()
+                {
+                    UserId = user.UserId,
+                    CompanyName = user.CompanyName,
+                    RoleName = user.RoleName,
+                    PasswordSalt = user.PasswordSalt,
+                    Username = user.Username,
+                    Email = user.Email,               
+                    PasswordHash = user.PasswordHash,
+                    PhoneNumber = user.PhoneNumber,
+                    RoleId = user.RoleId,
+                    RegisterDate = user.RegisterDate,
+                    IsActive = user.IsActive,
+                    ExpirationDate = user.ExpirationDate,
+                    VerifiedAt = user.VerifiedAt,
+                    IsSuspended = user.IsSuspended,
+                    VerificationToken = user.VerificationToken,
+                    PasswordResetToken = user.PasswordResetToken,
+                    ResetTokenExpires = user.ResetTokenExpires,
+                };
+
+                _context.Users.Remove(user);
+                _context.LiveAgents.Add(agent);
+            }
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<string> 

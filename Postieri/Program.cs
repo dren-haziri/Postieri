@@ -111,17 +111,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseRouting();
 app.UseAuthentication();
 
 app.UseRouting();
+app.UseWebSockets();
 app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
-app.UseWebSockets();
 
 app.Run();
 
