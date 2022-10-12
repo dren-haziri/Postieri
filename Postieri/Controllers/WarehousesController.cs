@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,22 +18,28 @@ namespace Postieri.Controllers
     public class WarehousesController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public WarehousesController(DataContext context)
+        public WarehousesController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
        
 
         // GET: api/Warehouses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Warehouse>>> GetWarehouse()
+        public async Task<ActionResult<IEnumerable<WarehouseShelvesDto>>> GetWarehouse()
         {
+            var warehouses = await _context.Warehouse.Include(sh => sh.Shelves).ToListAsync();
+
+
             if (_context.Warehouse == null)
             {
                 return NotFound();
             }
-            return await _context.Warehouse.AsNoTracking().Include(w => w.Shelves).ToListAsync();
+            return Ok(_mapper.Map<IEnumerable<WarehouseShelvesDto>>(warehouses));
+
         }
 
         // GET: api/Warehouses/5
@@ -44,23 +51,16 @@ namespace Postieri.Controllers
                 return NotFound();
             }
 
-            var _warehouse = _context.Warehouse.Where(n => n.WarehouseId == id).Select(warehouse => new Warehouse()
-            {
-                WarehouseId = warehouse.WarehouseId,
-                Location = warehouse.Location,
-                Area = warehouse.Area,
-                Name = warehouse.Name,
-                NumOfShelves = warehouse.NumOfShelves,
-                Shelves = warehouse.Shelves
-             
-            }).FirstOrDefault();
+            var _warehouse = _context.Warehouse.Where(n => n.WarehouseId == id).Include(w=>w.Shelves).FirstOrDefault();
 
             if (_warehouse == null)
             {
                 return NotFound();
             }
 
-            return _warehouse;
+            return Ok(_mapper.Map<WarehouseShelvesDto>(_warehouse));
+
+           
         }
 
         // PUT: api/Warehouses/5
@@ -72,12 +72,7 @@ namespace Postieri.Controllers
             var _warehouse = _context.Warehouse.FirstOrDefault(n => n.WarehouseId == id);
             if (_warehouse != null)
             {
-                _warehouse.Area = warehouse.Area;
-                _warehouse.NumOfShelves = warehouse.NumOfShelves;
-                _warehouse.Name = warehouse.Name;
-                _warehouse.Location = warehouse.Location;
-
-
+                _mapper.Map(warehouse, _warehouse);
                 _context.SaveChanges();
             }
 
@@ -93,16 +88,8 @@ namespace Postieri.Controllers
             {
                 return Problem("Entity set 'DataContext.Shelves'  is null.");
             }
-         
-
-            var _warehouse = new Warehouse()
-            {
-                Name = warehouse.Name,
-                Area = warehouse.Area,
-                Location = warehouse.Location,
-                NumOfShelves = warehouse.NumOfShelves,
-
-            };
+            var _warehouse = new Warehouse();
+            _mapper.Map(warehouse, _warehouse);
             _context.Warehouse.Add(_warehouse);
             _context.SaveChanges();
             return CreatedAtAction("GetWarehouse", new { id = warehouse.WarehouseId }, warehouse);
