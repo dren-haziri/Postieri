@@ -9,7 +9,7 @@ namespace Postieri.Validators
         {
             RuleFor(user => user.Username).NotEmpty().NotNull().MinimumLength(2).WithMessage("{PropertyName} must be a string with a minimum length of 2.").MaximumLength(15).WithMessage("{PropertyName} must be a string with a maximum length of 15.");
             RuleFor(user => user.Password).Password();
-            RuleFor(user => user.ConfirmPassword).Matches(user => user.Password).WithMessage("The passwords do not match!");
+            RuleFor(user => user.ConfirmPassword).Equal(user => user.Password).WithMessage("The passwords do not match!");
             RuleFor(user => user.Email).EmailAddress().NotEmpty().NotNull();
             RuleFor(user => user.PhoneNumber).NotEmpty().NotNull();
             RuleFor(user => user.CompanyName).MinimumLength(2).WithMessage("{PropertyName} must have 2 or more characters ").NotEmpty().NotNull();
@@ -44,7 +44,7 @@ namespace Postieri.Validators
         public ResetPasswordValidator()
         {
             RuleFor(x => x.Password).Password();
-            RuleFor(x => x.ConfirmPassword).Matches(x => x.Password);
+            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("The passwords do not match!");
             RuleFor(x => x.PasswordResetToken).NotEmpty().NotNull();
         }
     }

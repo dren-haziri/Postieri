@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Postieri.Data;
 
@@ -11,9 +12,10 @@ using Postieri.Data;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221007144839_Remove-Title")]
+    partial class RemoveTitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,6 +52,47 @@ namespace Postieri.Migrations
                     b.ToTable("Businesses");
                 });
 
+            modelBuilder.Entity("Postieri.Models.ClientOrder", b =>
+                {
+                    b.Property<Guid>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Phone")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("ClientOrders");
+                });
 
             modelBuilder.Entity("Postieri.Models.Dimension", b =>
                 {
@@ -88,31 +131,20 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CompanyToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CourierId")
+                    b.Property<Guid>("CourierId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("ManagerId")
+                    b.Property<Guid>("ManagerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("OrderedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Phone")
-                        .HasColumnType("int");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -121,17 +153,17 @@ namespace Postieri.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Sign")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("OrderId");
-
-                    b.HasIndex("CourierId");
 
                     b.ToTable("Orders");
                 });
@@ -322,30 +354,6 @@ namespace Postieri.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Postieri.Models.Courier", b =>
-                {
-                    b.HasBaseType("Postieri.User");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("Couriers", (string)null);
-                });
-
-            modelBuilder.Entity("Postieri.Models.Order", b =>
-                {
-                    b.HasOne("Postieri.Models.Courier", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("CourierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Postieri.Models.Shelf", b =>
                 {
                     b.HasOne("Postieri.Models.Warehouse", "Warehouse")
@@ -366,21 +374,6 @@ namespace Postieri.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Postieri.Models.Courier", b =>
-                {
-                    b.HasOne("Postieri.User", null)
-                        .WithOne()
-                        .HasForeignKey("Postieri.Models.Courier", "UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("Postieri.Models.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId");
-
-                    b.Navigation("Vehicle");
-                });
-
             modelBuilder.Entity("Postieri.Models.Role", b =>
                 {
                     b.Navigation("Users");
@@ -389,11 +382,6 @@ namespace Postieri.Migrations
             modelBuilder.Entity("Postieri.Models.Warehouse", b =>
                 {
                     b.Navigation("Shelves");
-                });
-
-            modelBuilder.Entity("Postieri.Models.Courier", b =>
-                {
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
