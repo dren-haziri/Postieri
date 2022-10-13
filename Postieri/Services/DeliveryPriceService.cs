@@ -13,7 +13,7 @@ namespace Postieri.Services
         }
         public List<DeliveryPrice> GetCalculations()
         {
-            return _context.DeliveryPrices.ToList();
+            return _context.DeliveryPrices.Include(x=> x.Dimension).ToList();
         }
         public bool AddCalculation(DeliveryPrice request)
         {
