@@ -43,6 +43,12 @@ namespace Postieri.Services
                 return false;
             }
 
+            var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == order.CompanyToken).FirstOrDefault();
+            if (bussinesExists == null)
+            {
+                return false;
+            }
+
             var _order = new Order();
             _mapper.Map(order, _order);
             _context.Orders.Add(_order);
