@@ -22,21 +22,8 @@ namespace Postieri.Validators
             DateTime currentYear = DateTime.Now;
             DateTime orderDate = date;
 
-            if (orderDate <= currentYear && orderDate.Year > (currentYear.Year - 120))
-            {
-              
-                return true;
-            }
+            return orderDate <= currentYear && orderDate.Year > (currentYear.Year - 120);
 
-            return false;
         }
-       
-           
-            
-        
-
-
     }
-
-
 }

@@ -34,11 +34,13 @@ namespace Postieri.Controllers
             _businessIntegration.PostOrder(order);
             return Ok();
         }
+
         [HttpGet("GetAllOrders")]
         public ActionResult<List<Order>> GetAllOrders()
         {
             return Ok(_businessIntegration.GetAllOrders());
         }
+
         [HttpGet("GetOrderById")]
         public Order GetOrders(Guid id)
         {

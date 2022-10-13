@@ -37,7 +37,6 @@ namespace Postieri.Controllers
                 Email = request.Email,
                 Username = request.Username,
                 CompanyName = request.CompanyName,
-                //RoleName = request.RoleName,
                 PhoneNumber = request.PhoneNumber,
 
             };

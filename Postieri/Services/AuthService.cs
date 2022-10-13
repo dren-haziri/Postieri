@@ -190,7 +190,8 @@ namespace Postieri.Services
             using (var hmac = new HMACSHA512(passwordSalt))
             {
                 var computedHash =
-                    hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                    hmac.ComputeHash(System.Text.Encoding.UTF8
+                    .GetBytes(password));
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
