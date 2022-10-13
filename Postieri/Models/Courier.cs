@@ -10,7 +10,7 @@ namespace Postieri.Models
     {
         public bool IsAvailable { get; set; } = true;
         [ForeignKey("Vehicle")]
-        public int? VehicleId { get; set; }
+        public int VehicleId { get; set; }
         public Vehicle? Vehicle { get; set; }
 
         public List<Order>? Orders { get; set; }
