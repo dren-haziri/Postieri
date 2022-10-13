@@ -1,4 +1,5 @@
 ﻿using Postieri.Models;
+using Postieri.Services;
 
 namespace Postieri.Interfaces
 {
@@ -7,6 +8,6 @@ namespace Postieri.Interfaces
         List<Role> GetRoles();
         bool AddRole(Role request);
         bool UpdateRole(Role request);
-        bool DeleteRole(Guid id);
+        Task<ServiceResponse<string>> DeleteRole(Guid id);
     }
 }

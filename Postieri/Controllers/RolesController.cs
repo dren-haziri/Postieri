@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
 using Postieri.Models;
+using Postieri.Services;
 
 namespace Postieri.Controllers
 {
@@ -37,10 +38,14 @@ namespace Postieri.Controllers
         }
 
         [HttpDelete]
-        public ActionResult<List<Role>> Delete(Guid id)
+        public async Task<ActionResult<ServiceResponse<string>>> DeleteRole(Guid id)
         {
-            _rolesService.DeleteRole(id);
-            return Ok(_rolesService.GetRoles());
+            var response = await _rolesService.DeleteRole(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
     }
 }
