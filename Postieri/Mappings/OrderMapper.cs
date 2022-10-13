@@ -1,5 +1,6 @@
 ﻿using Postieri.Models;
 using AutoMapper;
+using Postieri.DTO;
 
 namespace Postieri.Mappings
 {
@@ -9,6 +10,7 @@ namespace Postieri.Mappings
         public OrderMapper()
         {
             CreateMap<Order, Product>().ReverseMap();
+            CreateMap<Order, OrderDto>().ReverseMap();
         }
     }
 }

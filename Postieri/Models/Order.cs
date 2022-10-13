@@ -10,7 +10,7 @@ namespace Postieri.Models
     {
         [Key]
         public Guid OrderId { get; set; }
-        public Product Products { get; set; }
+        public List<Product> Products { get; set; }
         public DateTime Date { get; set; }
         public DateTime OrderedOn { get; set; }
         public double Price { get; set; }

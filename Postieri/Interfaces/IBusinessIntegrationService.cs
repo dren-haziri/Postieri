@@ -9,9 +9,9 @@ namespace Postieri.Interfaces
     {
 
         bool SaveBusiness(BusinessDto request);
-        bool AddOrder(OrderDto request);
         Order GetOrders(Guid id);
         ActionResult<List<Order>> GetAllOrders();
+        bool PostOrder(OrderDto order);
 
 
     }

@@ -25,56 +25,31 @@ namespace Postieri.Services
 
         public Order GetOrders(Guid id)
         {
-
             var ordersFromDb = _context.Orders.Where(n => n.OrderId == id).Include(w => w.Products).FirstOrDefault();
-
             var orders = _context.Orders.FindAsync(id);
             var orderToReturn = _mapper.Map<Order>(ordersFromDb);
             return orderToReturn;
         }
         public ActionResult<List<Order>> GetAllOrders()
         {
-            var orders = _context.Orders.ToList();
+            var orders = _context.Orders.Include(x => x.Products).ToList();
             return orders;
         }
-        public bool AddOrder(OrderDto request)
+
+        public bool PostOrder(OrderDto order)
         {
-
-            if (request == null)
+            if (order == null)
             {
                 return false;
             }
 
-
-            var Order = new Order()
-            {
-                CompanyToken = request.JWT,
-                Date = request.Date,
-                Products = new Product
-                {
-                    Price = request.Price,
-                    Length = request.Length,
-                    Width = request.Width,
-                    Name = request.Name,
-                    Height = request.Height
-                },
-                Address = request.Address,
-                Phone = request.Phone,
-                Email = request.Email,
-
-            };
-
-            var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == request.JWT).FirstOrDefault();
-            if (bussinesExists == null)
-            {
-                return false;
-            }
-
-            _context.Orders.Add(Order);
+            var _order = new Order();
+            _mapper.Map(order, _order);
+            _context.Orders.Add(_order);
             _context.SaveChangesAsync();
+
             return true;
         }
-
         public bool SaveBusiness(BusinessDto request)
         {
             if (request == null)

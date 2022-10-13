@@ -100,17 +100,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddSingleton<WebSocketServerConnectionManager>();
-
-//var config = new MapperConfiguration(cfg => {
-//cfg.CreateMap<Order, Product>()
-//   .ForMember(destination => destination.Product,
-//map => map.MapFrom(
-//  source => new Product
-//  {
-//      City = source.length,
-//      State = source.State,
-//      Country = source.Country
-//  }));
 var app = builder.Build();
 
 
