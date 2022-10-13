@@ -15,7 +15,7 @@ namespace Postieri.Controllers
             _courierService = courierService;
         }
 
-        [HttpPut]
+        [HttpPut("changestatus")]
         public ActionResult<List<StatusOrderDto>> ChangeStatus(Guid orderId, string status)
         {
              _courierService.UpdateStatus(orderId, status);
