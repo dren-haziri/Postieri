@@ -11,7 +11,7 @@
         public string Email { get; set; }
         public string CompanyName { get; set; }
 
-        public Guid RoleId { get; set; }
+        public string RoleName { get; set; }
         public bool IsSuspended { get; set; }
 
         public string PhoneNumber { get; set; }
