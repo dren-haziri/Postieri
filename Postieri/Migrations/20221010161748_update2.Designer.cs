@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Postieri.Data;
 
@@ -11,13 +12,14 @@ using Postieri.Data;
 namespace Postieri.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221010161748_update2")]
+    partial class update2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -49,7 +51,6 @@ namespace Postieri.Migrations
 
                     b.ToTable("Businesses");
                 });
-
 
             modelBuilder.Entity("Postieri.Models.Dimension", b =>
                 {
@@ -117,7 +118,7 @@ namespace Postieri.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("ProductsProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Sign")
@@ -131,9 +132,36 @@ namespace Postieri.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("CourierId");
+                    b.HasIndex("ProductsProductId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Postieri.Models.Product", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Height")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Length")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Width")
+                        .HasColumnType("float");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Postieri.Models.Role", b =>
@@ -302,9 +330,6 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -322,28 +347,15 @@ namespace Postieri.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Postieri.Models.Courier", b =>
-                {
-                    b.HasBaseType("Postieri.User");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("Couriers", (string)null);
-                });
-
             modelBuilder.Entity("Postieri.Models.Order", b =>
                 {
-                    b.HasOne("Postieri.Models.Courier", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("CourierId")
+                    b.HasOne("Postieri.Models.Product", "Products")
+                        .WithMany()
+                        .HasForeignKey("ProductsProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Postieri.Models.Shelf", b =>
@@ -366,21 +378,6 @@ namespace Postieri.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Postieri.Models.Courier", b =>
-                {
-                    b.HasOne("Postieri.User", null)
-                        .WithOne()
-                        .HasForeignKey("Postieri.Models.Courier", "UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("Postieri.Models.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId");
-
-                    b.Navigation("Vehicle");
-                });
-
             modelBuilder.Entity("Postieri.Models.Role", b =>
                 {
                     b.Navigation("Users");
@@ -389,11 +386,6 @@ namespace Postieri.Migrations
             modelBuilder.Entity("Postieri.Models.Warehouse", b =>
                 {
                     b.Navigation("Shelves");
-                });
-
-            modelBuilder.Entity("Postieri.Models.Courier", b =>
-                {
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

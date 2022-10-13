@@ -20,10 +20,9 @@ namespace Postieri.Data
         public DbSet<Shelf> Shelves { get; set; }
         public DbSet<Warehouse> Warehouse { get; set; }
         public DbSet<Business> Businesses { get; set; }
-        public DbSet<ClientOrder> ClientOrders { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
-        public DbSet<Courier> Couriers { get; set; }
-        
+         public DbSet<Courier> Couriers { get; set; }
+          public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

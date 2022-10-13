@@ -25,6 +25,8 @@ using System.Net.WebSockets;
 using System.Net;
 using System.Text;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
+using AutoMapper;
+using Postieri.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -83,6 +85,8 @@ builder.Services.AddScoped<IExportDataPdfService, ExportDataPdfService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IBusinessIntegrationService, BusinessIntegrationService>();
+builder.Services.AddAutoMapper(typeof(OrderMapper).Assembly);
+builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICourierService, CourierService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -98,7 +102,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddSingleton<WebSocketServerConnectionManager>();
-
 var app = builder.Build();
 
 
