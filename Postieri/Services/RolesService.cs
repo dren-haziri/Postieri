@@ -57,23 +57,35 @@ namespace Postieri.Services
                 return true;
             }
         }
-        public bool DeleteRole(Guid id)
+        public async Task<ServiceResponse<string>> DeleteRole(Guid id)
         {
+            var user = _context.Users.Where(n => n.RoleId == id).ToList();
             var role = _context.Roles.Find(id);
+
             if (role == null)
             {
-                return false;
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "Role not found."
+                };
             }
-            else if (!RoleExists(role))
+            if (user.Count != 0)
             {
-                return false;
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "Can not delete this role, cause there are users with this role!"
+                };
+
             }
-            else
+            _context.Roles.Remove(role);
+            _context.SaveChanges();
+            return new ServiceResponse<string>
             {
-                _context.Roles.Remove(role);
-                _context.SaveChanges();
-                return true;
-            } 
+                Success = true,
+                Message = "Role deleted successfully"
+            };
         }
         public bool RoleExists(Role request)
         {
