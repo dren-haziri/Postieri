@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Postieri.Data;
 using Postieri.DTO;
+using Postieri.Mappings;
 using Postieri.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,42 +15,41 @@ namespace Postieri.Services
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        public BusinessIntegrationService(DataContext context, IConfiguration configuration)
+        private readonly IMapper _mapper;
+        public BusinessIntegrationService(DataContext context, IConfiguration configuration, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
+            _mapper = mapper;
         }
-        public bool AddClientOrder(ClientOrderDto request)
+
+        public Order GetOrders(Guid id)
         {
+            var ordersFromDb = _context.Orders.Where(n => n.OrderId == id).Include(w => w.Products).FirstOrDefault();
+            var orders = _context.Orders.FindAsync(id);
+            var orderToReturn = _mapper.Map<Order>(ordersFromDb);
+            return orderToReturn;
+        }
+        public ActionResult<List<Order>> GetAllOrders()
+        {
+            var orders = _context.Orders.Include(x => x.Products).ToList();
+            return orders;
+        }
 
-            if (request == null)
+        public bool PostOrder(OrderDto order)
+        {
+            if (order == null)
             {
                 return false;
             }
 
-            var clientOrder = new ClientOrder()
-            {
-                CompanyToken = request.JWT,
-                ProductId = request.ProductId,
-                Date = request.Date,
-                Address = request.Address,
-                Phone = request.Phone,
-                Email = request.Email,
-                Location = request.Location,
-                Price = request.Price,
-            };
-
-            var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == request.JWT).FirstOrDefault();
-            if (bussinesExists == null)
-            {
-                return false;
-            }
-
-            _context.ClientOrders.Add(clientOrder);
+            var _order = new Order();
+            _mapper.Map(order, _order);
+            _context.Orders.Add(_order);
             _context.SaveChangesAsync();
+
             return true;
         }
-
         public bool SaveBusiness(BusinessDto request)
         {
             if (request == null)

@@ -3,6 +3,7 @@ global using Postieri.DTOs;
 using Postieri.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
 using Postieri.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -24,6 +25,8 @@ using System.Net.WebSockets;
 using System.Net;
 using System.Text;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
+using AutoMapper;
+using Postieri.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -82,6 +85,9 @@ builder.Services.AddScoped<IExportDataPdfService, ExportDataPdfService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IBusinessIntegrationService, BusinessIntegrationService>();
+builder.Services.AddAutoMapper(typeof(OrderMapper).Assembly);
+builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ICourierService, CourierService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -96,7 +102,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddSingleton<WebSocketServerConnectionManager>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 
@@ -105,18 +113,23 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+    //app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
 app.UseRouting();
 app.UseAuthentication();
-app.UseAuthorization();
-app.UseWebSockets();
 
-app.MapControllers();
+app.UseRouting();
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+app.UseWebSockets();
 
 app.Run();
 

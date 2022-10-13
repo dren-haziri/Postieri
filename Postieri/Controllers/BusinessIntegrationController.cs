@@ -18,8 +18,8 @@ namespace Postieri.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BusinessIntegrationController :ControllerBase
-        
+    public class BusinessIntegrationController : ControllerBase
+
     {
         private readonly IBusinessIntegrationService _businessIntegration;
 
@@ -28,12 +28,23 @@ namespace Postieri.Controllers
             _businessIntegration = businessIntegrationService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<string>> AddClientOrder(ClientOrderDto request)
+        [HttpPost("PostOrder")]
+        public ActionResult<List<Order>> PostOrder(OrderDto order)
         {
-            _businessIntegration.AddClientOrder(request);
+            _businessIntegration.PostOrder(order);
             return Ok();
         }
+        [HttpGet("GetAllOrders")]
+        public ActionResult<List<Order>> GetAllOrders()
+        {
+            return Ok(_businessIntegration.GetAllOrders());
+        }
+        [HttpGet("GetOrderById")]
+        public Order GetOrders(Guid id)
+        {
+            return _businessIntegration.GetOrders(id);
+        }
+
         [HttpPost("SaveBusiness")]
         public async Task<ActionResult<string>> SaveBusiness(BusinessDto request)
         {

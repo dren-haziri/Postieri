@@ -158,5 +158,37 @@ namespace Postieri.Controllers
         {
             return (_context.Vehicles?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        private bool VehicleInUseHasDefect(int id)
+        {
+            var vehicle = _context.Vehicles.Find(id);
+
+            return vehicle.HasDefect == true;
+        }
+
+        private int GetDefaultAvailableVehicle()
+        {
+            return _context.Vehicles.Where(x => x.IsAvailable == true && x.HasDefect == false).FirstOrDefault().Id;
+        }
+
+        [HttpPut("ChangeVehicle")]
+        public async Task<IActionResult> ChangeVehicleAsync(string email)
+        {
+            var courier = await _context.Couriers.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+
+            if (courier == null)
+            {
+                return NotFound();
+            }
+            if (VehicleInUseHasDefect(courier.VehicleId))
+            {
+                courier.VehicleId = GetDefaultAvailableVehicle();
+                await _context.SaveChangesAsync();
+            }
+
+            return NoContent();
+
+
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace Postieri.Controllers
                                select new Order()
                                {
                                    OrderId = a.OrderId,
-                                   ProductId = a.ProductId,
+                                   //ProductId = a.ProductId,
                                    Date = a.Date,
                                    OrderedOn = a.OrderedOn,
                                    Price = a.Price,

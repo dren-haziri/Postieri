@@ -126,7 +126,7 @@ namespace Postieri.Controllers
             return Ok(response);
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPut("AssignRole")]
         public async Task<ActionResult<ServiceResponse<string>>> AssignRole(string email, AssignRoleDto request)
         {
@@ -139,7 +139,7 @@ namespace Postieri.Controllers
             return Ok(response);
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPut("RevokeRole")]
         public async Task<ActionResult<ServiceResponse<string>>> RevokeRole(string email)
         {

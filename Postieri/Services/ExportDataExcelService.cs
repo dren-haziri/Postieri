@@ -30,7 +30,7 @@ namespace Postieri.Services
             for (int i = 1; i <= objectList.Count; i++)
             {
                 worksheet.Cell(i + 1, 1).Value = objectList[index].OrderId.ToString();
-                worksheet.Cell(i + 1, 2).Value = objectList[index].ProductId.ToString();
+                //worksheet.Cell(i + 1, 2).Value = objectList[index].ProductId.ToString();
                 worksheet.Cell(i + 1, 3).Value = objectList[index].Date.ToString();
                 worksheet.Cell(i + 1, 4).Value = objectList[index].OrderedOn.ToString();
                 worksheet.Cell(i + 1, 5).Value = objectList[index].Price.ToString();
