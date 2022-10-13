@@ -32,7 +32,11 @@ namespace Postieri.Controllers
             {
                 return NotFound();
             }
-            return await _context.Warehouse.AsNoTracking().Include(w => w.Shelves).ToListAsync();
+
+            return await _context.Warehouse
+                .AsNoTracking()
+                .Include(w => w.Shelves)
+                .ToListAsync();
         }
 
         // GET: api/Warehouses/5
@@ -44,16 +48,18 @@ namespace Postieri.Controllers
                 return NotFound();
             }
 
-            var _warehouse = _context.Warehouse.Where(n => n.WarehouseId == id).Select(warehouse => new Warehouse()
-            {
-                WarehouseId = warehouse.WarehouseId,
-                Location = warehouse.Location,
-                Area = warehouse.Area,
-                Name = warehouse.Name,
-                NumOfShelves = warehouse.NumOfShelves,
-                Shelves = warehouse.Shelves
+            var _warehouse = _context.Warehouse
+                .Where(n => n.WarehouseId == id)
+                .Select(warehouse => new Warehouse()
+                {
+                    WarehouseId = warehouse.WarehouseId,
+                    Location = warehouse.Location,
+                    Area = warehouse.Area,
+                    Name = warehouse.Name,
+                    NumOfShelves = warehouse.NumOfShelves,
+                    Shelves = warehouse.Shelves
              
-            }).FirstOrDefault();
+                }).FirstOrDefault();
 
             if (_warehouse == null)
             {

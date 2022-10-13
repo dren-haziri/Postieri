@@ -43,7 +43,10 @@ namespace Postieri.Services
                 return false;
             }
 
-            var bussinesExists = _context.Businesses.Where(x => x.BusinessToken == order.CompanyToken).FirstOrDefault();
+            var bussinesExists = _context.Businesses
+                .Where(x => x.BusinessToken == order.CompanyToken)
+                .FirstOrDefault();
+
             if (bussinesExists == null)
             {
                 return false;
@@ -63,7 +66,10 @@ namespace Postieri.Services
                 return false;
             }
 
-            var alreadyExist = _context.Businesses.Where(x => x.BusinessName == request.BusinessName & x.Email == request.Email).FirstOrDefault();
+            var alreadyExist = _context.Businesses
+                .Where(x => x.BusinessName == request.BusinessName & x.Email == request.Email)
+                .FirstOrDefault();
+
             if (alreadyExist != null)
             {
                 return false;
@@ -80,19 +86,20 @@ namespace Postieri.Services
             return true;
 
         }
-        private string CreateToken(Business b)
+        private string CreateToken(Business business)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, b.BusinessName),
-                new Claim(ClaimTypes.Email, b.Email)
+                new Claim(ClaimTypes.Name, business.BusinessName),
+                new Claim(ClaimTypes.Email, business.Email)
             };
+
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds
+                signingCredentials: credentials
                 );
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
