@@ -65,9 +65,9 @@ namespace Postieri.Controllers
         }
 
         [HttpPost("verify")]
-        public async Task<ActionResult<ServiceResponse<string>>> Verify(UserVerificationDto request)
+        public async Task<ActionResult<ServiceResponse<string>>> Verify([FromBody]string request)
         {
-            var response = await _authService.Verify(request.VerificationToken);
+            var response = await _authService.Verify(request);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -102,7 +102,7 @@ namespace Postieri.Controllers
 
         [Authorize(Roles = "Administrator")]
         [HttpPost("Suspened")]
-        public async Task<ActionResult<ServiceResponse<string>>> Suspened(string email)
+        public async Task<ActionResult<ServiceResponse<string>>> Suspened([FromBody] string email)
         {
             var response = await _authService.Suspend(email);
             if (!response.Success)
@@ -115,7 +115,7 @@ namespace Postieri.Controllers
 
         [Authorize(Roles = "Administrator")]
         [HttpPost("Unsuspened")]
-        public async Task<ActionResult<ServiceResponse<string>>> Unsuspened(string email)
+        public async Task<ActionResult<ServiceResponse<string>>> Unsuspened([FromBody] string email)
         {
             var response = await _authService.Unsuspend(email);
             if (!response.Success)
