@@ -12,5 +12,7 @@ namespace Postieri.Models
         public double Height { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
+        public Shelf? Shelf { get; set; }
+        public int? ShelfId { get; set; }
     }
 }

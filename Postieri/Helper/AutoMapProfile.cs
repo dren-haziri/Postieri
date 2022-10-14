@@ -12,8 +12,11 @@ namespace Postieri.Helper
             CreateMap<Warehouse, WarehouseDto>().ReverseMap();
             CreateMap<Shelf, ShelfWarehouseDto>();
             CreateMap<Warehouse, WarehouseShelvesDto>();
-          
-            
+            CreateMap<Shelf,ShelfProductsDto > ().ReverseMap();
+            CreateMap<Shelf,ProductDto > ().ReverseMap();        
+            CreateMap<ProductDto, Product>().ReverseMap();
+
+
 
 
         }
