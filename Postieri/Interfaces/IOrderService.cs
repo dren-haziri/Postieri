@@ -9,5 +9,7 @@ namespace Postieri.Interfaces
         bool AddOrder(Order request);
         bool UpdateOrder(Order request);
         bool DeleteOrder(Guid OrderId);
+        void setStatus(Guid orderId, string status);
+        void assignCourierToOrder(Guid orderId, Guid courierId);
     }
 }

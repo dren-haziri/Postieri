@@ -48,5 +48,19 @@ namespace Postieri.Controllers
         {
             return Ok(_orderService.GetOrderById(OrderId));
         }
+
+        [HttpPut("UpdateStatusOfOrder")]
+        public ActionResult<List<Order>> setStatus(Guid orderId, string status)
+        {
+            _orderService.setStatus(orderId, status);
+            return Ok();
+        }
+
+        [HttpPut("assignCourierToOrder")]
+        public ActionResult<List<Order>> assignCourierToOrder(Guid orderId, Guid courierId)
+        {
+            _orderService.assignCourierToOrder(orderId, courierId);
+            return Ok();
+        }
     }
 }
