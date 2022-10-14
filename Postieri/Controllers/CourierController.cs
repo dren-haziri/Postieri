@@ -22,16 +22,21 @@ namespace Postieri.Controllers
              _courierService.UpdateStatus(orderId, status);
             return Ok();
         }
+        [HttpGet("orders")]
+        public ActionResult<List<Order>> GetOrdersForCourier(Guid courierId)
+        {
+            return Ok(_courierService.GetOrdersForCourier(courierId));    
+        }
         [HttpPut("accept-order")]
-        public ActionResult<List<Order>> AcceptOrder(Guid order, Guid courierId)
+        public ActionResult<List<StatusOrderDto>> AcceptOrder(Guid order, Guid courierId)
         {
             _courierService.AcceptOrder(order, courierId);
             return Ok();
         }
         [HttpPut("decline-order")]
-        public ActionResult<List<Order>> DeclineOrder(Guid orderId)
+        public ActionResult<List<StatusOrderDto>> DeclineOrder(Guid orderId, Guid courierId)
         {
-            _courierService.DeclineOrder(orderId);
+            _courierService.DeclineOrder(orderId, courierId);
             return Ok();
         }
 

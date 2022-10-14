@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Postieri.Data;
 using Postieri.DTOs;
 using Postieri.Models;
-using System.Security.Principal;
 
 namespace Postieri.Services
 {
@@ -26,7 +25,12 @@ namespace Postieri.Services
                 _dbcontext.SaveChanges();
             }
         } 
-        public List<Order> AcceptOrder(Guid order, Guid courierId)
+        public List<Order> GetOrdersForCourier(Guid courierId)
+        {
+            var CourierUserId = _dbcontext.Users.Find(courierId);
+            return _dbcontext.Orders.Where(o => o.CourierId == CourierUserId.UserId).ToList();
+        }  
+        public bool AcceptOrder(Guid order, Guid courierId)
         {
             var orderId = _dbcontext.Orders.Find(order);
 
@@ -34,21 +38,27 @@ namespace Postieri.Services
             {
                 orderId.Status = "accepted";
                 _dbcontext.SaveChanges();
-            }     
-            var CourierUserId = _dbcontext.Users.Find(courierId);
-
-            return _dbcontext.Orders.Where(o => o.CourierId == CourierUserId.UserId).ToList();
-            
+                return true;
+            }
+            else
+            {
+                return false;   
+            }              
         }
-        public void DeclineOrder(Guid orderId)
+        public bool DeclineOrder(Guid orderId, Guid courierId)
         {
             var order = _dbcontext.Orders.Find(orderId);
 
-            if (order != null)
+            if (order != null && order.CourierId == courierId)
             {
                 order.Status = "declined";
                 order.CourierId = null;
                 _dbcontext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
