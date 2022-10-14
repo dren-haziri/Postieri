@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using MimeKit.Text;
-using Postieri.DTOs;
-using Postieri.Interfaces;
+using Postieri.Models;
+using Postieri.Services.EmailService;
 
 namespace Postieri.Controllers
 {
@@ -20,11 +20,18 @@ namespace Postieri.Controllers
             _emailService = emailService;
         }
 
-        [HttpPost]
-        public IActionResult SendEmail(EmailDto request)
+        [HttpPost("Send")]
+        public async Task<IActionResult> Send([FromForm] Email mailRequest)
         {
-            _emailService.SendEmail(request);
-
-            return Ok();
-    }  }
+            try
+            {
+                await _emailService.SendEmailAsync(mailRequest);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    }
 }
