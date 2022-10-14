@@ -16,7 +16,7 @@ namespace Postieri.Interfaces
             _config = config;
         }
 
-        public void SendEmail(EmailDto request)
+        public void SendEmail(Email request)
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(request.From));
