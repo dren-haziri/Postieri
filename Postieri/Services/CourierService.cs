@@ -10,7 +10,6 @@ namespace Postieri.Services
     public class CourierService : ICourierService
     {
         private readonly DataContext _dbcontext;
-        private readonly UserManager<IdentityUser> _userManager;
 
         public CourierService(DataContext dbcontext)
         {
