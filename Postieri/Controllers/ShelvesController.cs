@@ -19,17 +19,20 @@ namespace Postieri.Controllers
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
+      
+
         public ShelvesController(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+           
         }
 
         // GET: api/Shelves
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShelfWarehouseDto>>> GetShelves()
         {
-            var shelves = await _context.Shelves.Include(sh => sh.Warehouse).ToListAsync();
+            var shelves = await _context.Shelves.Include(sh => sh.Warehouse).Include(sh => sh.Products).ToListAsync();
             if (_context.Shelves == null)
           {
               return NotFound();
@@ -47,7 +50,7 @@ namespace Postieri.Controllers
                 return NotFound();
             }
 
-            var _shelf = _context.Shelves.Where(n => n.ShelfId == id).Include(sh => sh.Warehouse).FirstOrDefault();
+            var _shelf = _context.Shelves.Where(n => n.ShelfId == id).Include(sh => sh.Warehouse).Include(sh=>sh.Products).FirstOrDefault();
 
             if (_shelf == null)
             {
@@ -92,6 +95,47 @@ namespace Postieri.Controllers
             _context.Shelves.Add(_shelf);
             _context.SaveChanges();
             return CreatedAtAction(nameof(PostShelf), new { id = shelf.ShelfId }, shelf);
+
+        }
+        [HttpPost("add-product-to-shelf")]
+        public string AddProductToShelf(ProductDto products)
+        {
+
+            var product = new Product();
+            _mapper.Map(products, product);
+            
+            var shelf = _context.Shelves
+                .Find(products.ShelfId);
+
+            if (shelf.AvailableSlots < 1)
+            {
+                return "Shelf is full!";
+            }
+
+            _context.Products
+                .Add(product);
+
+            shelf.AvailableSlots--;
+
+            _context.SaveChanges();
+            return "Product was stored successfully!";
+
+        }
+        [HttpPost("remove-product-from-shelf")]
+        public void RemoveProductFromShelf(Guid product)
+        {
+            var _product = _context.Products
+                .Find(product);  
+
+            var shelf = _context.Shelves
+                .Find(_product.ShelfId);
+
+            _product.ShelfId = 0 ;
+            if(shelf != null)
+            {
+                shelf.AvailableSlots++;
+            }
+            _context.SaveChanges();
 
         }
 
