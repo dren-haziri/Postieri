@@ -1,12 +1,10 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using MimeKit.Text;
-using Postieri.DTOs;
+using Postieri.Models;
 
-namespace Postieri.Interfaces
+namespace Postieri.Services.EmailService
 {
-
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _config;
@@ -15,14 +13,33 @@ namespace Postieri.Interfaces
         {
             _config = config;
         }
-
-        public void SendEmail(EmailDto request)
+        public async Task SendEmailAsync(Email mailRequest)
         {
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(request.From));
-            email.To.Add(MailboxAddress.Parse(_config.GetSection("EmailUserName").Value));
-            email.Subject = request.Subject;
-            email.Body = new TextPart(TextFormat.Html) { Text = request.Body };
+            email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
+            email.To.Add(MailboxAddress.Parse(mailRequest.To));
+            email.Subject = mailRequest.Subject;
+
+            var builder = new BodyBuilder();
+            if (mailRequest.Attachments != null)
+            {
+                byte[] fileBytes;
+                foreach (var file in mailRequest.Attachments)
+                {
+                    if (file.Length > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            file.CopyTo(memoryStream);
+                            fileBytes = memoryStream.ToArray();
+                        }
+                        builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
+                    }
+                }
+            }
+
+            builder.HtmlBody = mailRequest.Body;
+            email.Body = builder.ToMessageBody();
 
             using var smtp = new SmtpClient();
 
@@ -30,7 +47,7 @@ namespace Postieri.Interfaces
 
             smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
             smtp.Authenticate(_config.GetSection("EmailUserName").Value, _config.GetSection("EamilPassword").Value);
-            smtp.Send(email);
+            await smtp.SendAsync(email);
             smtp.Disconnect(true);
         }
     }
