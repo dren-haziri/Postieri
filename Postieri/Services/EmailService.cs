@@ -28,10 +28,10 @@ namespace Postieri.Services.EmailService
                 {
                     if (file.Length > 0)
                     {
-                        using (var ms = new MemoryStream())
+                        using (var memoryStream = new MemoryStream())
                         {
-                            file.CopyTo(ms);
-                            fileBytes = ms.ToArray();
+                            file.CopyTo(memoryStream);
+                            fileBytes = memoryStream.ToArray();
                         }
                         builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
                     }

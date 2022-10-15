@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Postieri.Models;
 using System.Text.RegularExpressions;
 
 namespace Postieri.Validators
@@ -26,16 +27,6 @@ namespace Postieri.Validators
             RuleFor(user => user.Password).NotEmpty().NotNull().WithMessage("{PropertyName} is required!");
             RuleFor(user => user.Email).EmailAddress().NotEmpty().NotNull();
           
-        }
-    }
-
-    public class EmailDtoValidator : AbstractValidator<EmailDto>
-    {
-        public EmailDtoValidator()
-        {
-            RuleFor(x => x.Body).NotEmpty().NotNull();
-            RuleFor(x => x.From).NotEmpty().NotNull();
-            RuleFor(x =>  x.Subject).NotEmpty().NotNull().MinimumLength(10);
         }
     }
 
