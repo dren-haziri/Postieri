@@ -7,7 +7,7 @@ namespace Postieri.Validators
     {
         public EmailValidator()
         {
-            RuleFor(x => x.ToEmail).NotEmpty().NotNull();
+            RuleFor(x => x.To).NotEmpty().NotNull();
             RuleFor(x => x.Subject).NotEmpty().NotNull();
             RuleFor(x => x.Body).NotEmpty().NotNull();
             RuleFor(x => x.Attachments).NotEmpty().NotNull();

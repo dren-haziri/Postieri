@@ -17,7 +17,7 @@ namespace Postieri.Services.EmailService
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
-            email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+            email.To.Add(MailboxAddress.Parse(mailRequest.To));
             email.Subject = mailRequest.Subject;
 
             var builder = new BodyBuilder();
