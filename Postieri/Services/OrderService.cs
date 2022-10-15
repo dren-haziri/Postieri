@@ -1,4 +1,5 @@
-﻿using Postieri.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Postieri.Data;
 using Postieri.Models;
 using System.Linq;
 
@@ -105,5 +106,32 @@ namespace Postieri.Services
             bool alreadyExist = _context.Orders.Any(x => x.OrderId == request.OrderId);
             return alreadyExist;
         }
+        public void setStatus(Guid orderId, string status)
+        {
+
+            var ordersFromDb = _context.Orders.Where(n => n.OrderId == orderId).Include(w => w.Products).FirstOrDefault();
+
+            if (ordersFromDb != null)
+            {
+                ordersFromDb.Status = status;
+                if (status == "reject")
+                {
+                    _context.Orders.Remove(ordersFromDb);
+                    _context.SaveChanges();
+                }
+                _context.SaveChanges();
+            };
+        }
+        public void assignCourierToOrder(Guid orderId, Guid courierId)
+        {
+            var courier = _context.Couriers.Find(courierId);
+            var order = _context.Orders.Find(orderId);
+            if (order != null && courier != null)
+            {
+                order.CourierId = courierId;
+                _context.SaveChanges();
+            }
+        }
     }
 }
+
