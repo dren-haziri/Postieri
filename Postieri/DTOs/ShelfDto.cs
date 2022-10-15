@@ -8,14 +8,14 @@ namespace Postieri.DTOs
     {
         public int ShelfId { get; set; }
         public int WarehouseId { get; set; }
-        public char BinLetter { get; set; }
+        public string BinLetter { get; set; }
         public int AvailableSlots { get; set; }
     }
     public class ShelfProductsDto
     {
         public int ShelfId { get; set; }
         public int WarehouseId { get; set; }
-        public char BinLetter { get; set; }
+        public string BinLetter { get; set; }
         public int AvailableSlots { get; set; }
         public List<ProductDto> Products { get; set; }
     }
@@ -24,7 +24,7 @@ namespace Postieri.DTOs
     {
         public int ShelfId { get; set; }
       
-        public char BinLetter { get; set; }
+        public string BinLetter { get; set; }
         public int AvailableSlots { get; set; }
         public int WarehouseId { get; set; }
 

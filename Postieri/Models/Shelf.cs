@@ -7,7 +7,7 @@
         public Warehouse? Warehouse { get; set; }
         public List<Product>? Products { get; set; }
 
-        public char BinLetter { get; set; }
+        public string BinLetter { get; set; }
         public int AvailableSlots { get; set; }     
 
 
