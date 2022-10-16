@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
+using Postieri.DTO;
 using Postieri.Models;
 using Postieri.Services;
 
@@ -16,37 +17,31 @@ namespace Postieri.Controllers
         {
             _orderService = orderService;
         }
-        [HttpGet]
-        public ActionResult<List<Order>> Get()
+
+        [HttpPost("PostOrder")]
+        public ActionResult<List<Order>> PostOrder(OrderDto order)
         {
-            return Ok(_orderService.GetOrders());
+            _orderService.PostOrder(order);
+            return Ok();
         }
 
-        [HttpPost]
-        public ActionResult<List<Order>> AddOrder(Order request)
+        [HttpGet("GetAllOrders")]
+        public ActionResult<List<Order>> GetAllOrders()
         {
-            _orderService.AddOrder(request);
-            return Ok(_orderService.GetOrders());
+            return Ok(_orderService.GetAllOrders());
         }
 
-        [HttpPut]
-        public ActionResult<List<Order>> UpdateOrder(Order request)
+        [HttpGet("GetOrderById")]
+        public Order GetOrder(Guid id)
         {
-            _orderService.UpdateOrder(request);
-            return Ok(_orderService.GetOrders());
+            return _orderService.GetOrder(id);
         }
 
         [HttpDelete]
         public ActionResult<List<Order>> DeleteOrder(Guid OrderId)
         {
             _orderService.DeleteOrder(OrderId);
-            return Ok(_orderService.GetOrders());
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Order> GetOrderById(Guid OrderId)
-        {
-            return Ok(_orderService.GetOrderById(OrderId));
+            return Ok(_orderService.GetAllOrders());
         }
 
         [HttpPut("UpdateStatusOfOrder")]
