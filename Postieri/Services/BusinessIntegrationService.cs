@@ -86,6 +86,20 @@ namespace Postieri.Services
             return true;
 
         }
+        public List<Business> GetBusinesses()
+        {
+            return _context.Businesses.ToList();
+        }
+        public List<Business> GetBusinessesByEmail(string email)
+        {
+            var business = _context.Businesses.FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower()));
+            return _context.Businesses.Where(o => o.Email == business.Email).ToList();
+        }
+        public List<Business> GetBusinessByToken(string token)
+        {
+           var business = _context.Businesses.FirstOrDefault(x => x.BusinessToken.Equals(token));
+            return _context.Businesses.Where(o => o.BusinessToken == business.BusinessToken).ToList();
+        }
         private string CreateToken(Business business)
         {
             List<Claim> claims = new List<Claim>

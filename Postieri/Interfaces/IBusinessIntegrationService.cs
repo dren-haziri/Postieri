@@ -12,6 +12,10 @@ namespace Postieri.Interfaces
         Order GetOrders(Guid id);
         ActionResult<List<Order>> GetAllOrders();
         bool PostOrder(OrderDto order);
+        List<Business> GetBusinesses();
+        List<Business> GetBusinessesByEmail(string email);
+        List<Business> GetBusinessByToken(string token);
+
 
 
     }
