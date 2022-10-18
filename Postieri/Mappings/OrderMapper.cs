@@ -11,6 +11,7 @@ namespace Postieri.Mappings
         {
             CreateMap<Order, Product>().ReverseMap();
             CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<Product, ProductDto>().ReverseMap();
         }
     }
 }

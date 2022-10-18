@@ -28,25 +28,6 @@ namespace Postieri.Controllers
             _businessIntegration = businessIntegrationService;
         }
 
-        [HttpPost("PostOrder")]
-        public ActionResult<List<Order>> PostOrder(OrderDto order)
-        {
-            _businessIntegration.PostOrder(order);
-            return Ok();
-        }
-
-        [HttpGet("GetAllOrders")]
-        public ActionResult<List<Order>> GetAllOrders()
-        {
-            return Ok(_businessIntegration.GetAllOrders());
-        }
-
-        [HttpGet("GetOrderById")]
-        public Order GetOrders(Guid id)
-        {
-            return _businessIntegration.GetOrders(id);
-        }
-
         [HttpPost("SaveBusiness")]
         public async Task<ActionResult<string>> SaveBusiness(BusinessDto request)
         {

@@ -15,50 +15,12 @@ namespace Postieri.Services
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
-        public BusinessIntegrationService(DataContext context, IConfiguration configuration, IMapper mapper)
+        public BusinessIntegrationService(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
-            _mapper = mapper;
         }
 
-        public Order GetOrders(Guid id)
-        {
-            var ordersFromDb = _context.Orders.Where(n => n.OrderId == id).Include(w => w.Products).FirstOrDefault();
-            var orders = _context.Orders.FindAsync(id);
-            var orderToReturn = _mapper.Map<Order>(ordersFromDb);
-            return orderToReturn;
-        }
-        public ActionResult<List<Order>> GetAllOrders()
-        {
-            var orders = _context.Orders.Include(x => x.Products).ToList();
-            return orders;
-        }
-
-        public bool PostOrder(OrderDto order)
-        {
-            if (order == null)
-            {
-                return false;
-            }
-
-            var bussinesExists = _context.Businesses
-                .Where(x => x.BusinessToken == order.CompanyToken)
-                .FirstOrDefault();
-
-            if (bussinesExists == null)
-            {
-                return false;
-            }
-
-            var _order = new Order();
-            _mapper.Map(order, _order);
-            _context.Orders.Add(_order);
-            _context.SaveChangesAsync();
-
-            return true;
-        }
         public bool SaveBusiness(BusinessDto request)
         {
             if (request == null)
