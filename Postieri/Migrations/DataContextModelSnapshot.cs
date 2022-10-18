@@ -17,10 +17,11 @@ namespace Postieri.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
 
             modelBuilder.Entity("Postieri.Models.DeliveryPrice", b =>
                 {
@@ -48,6 +49,34 @@ namespace Postieri.Migrations
                     b.HasKey("DeliveryPriceId");
 
                     b.ToTable("DeliveryPrices");
+
+            modelBuilder.Entity("Postieri.Models.Business", b =>
+                {
+                    b.Property<int>("BusinessID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BusinessID"), 1L, 1);
+
+                    b.Property<string>("BusinessName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BusinessToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PhoneNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("BusinessID");
+
+                    b.ToTable("Businesses");
+
                 });
 
             modelBuilder.Entity("Postieri.Models.Dimension", b =>
@@ -87,41 +116,89 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CompanyId")
+                    b.Property<Guid?>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CourierId")
+                    b.Property<string>("CompanyToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CourierId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ManagerId")
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ManagerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("OrderedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Phone")
+                        .HasColumnType("int");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Sign")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("OrderId");
 
+                    b.HasIndex("CourierId");
+
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Postieri.Models.Product", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Height")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Length")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ShelfId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Width")
+                        .HasColumnType("float");
+
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ShelfId");
+
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Postieri.Models.Role", b =>
@@ -151,12 +228,12 @@ namespace Postieri.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShelfId"), 1L, 1);
 
+                    b.Property<int>("AvailableSlots")
+                        .HasColumnType("int");
+
                     b.Property<string>("BinLetter")
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
-
-                    b.Property<int>("MaxProducts")
-                        .HasColumnType("int");
 
                     b.Property<int>("WarehouseId")
                         .HasColumnType("int");
@@ -290,6 +367,9 @@ namespace Postieri.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -305,6 +385,41 @@ namespace Postieri.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Postieri.Models.Courier", b =>
+                {
+                    b.HasBaseType("Postieri.User");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("Couriers", (string)null);
+                });
+
+            modelBuilder.Entity("Postieri.Models.Order", b =>
+                {
+                    b.HasOne("Postieri.Models.Courier", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("CourierId");
+                });
+
+            modelBuilder.Entity("Postieri.Models.Product", b =>
+                {
+                    b.HasOne("Postieri.Models.Order", null)
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("Postieri.Models.Shelf", "Shelf")
+                        .WithMany("Products")
+                        .HasForeignKey("ShelfId");
+
+                    b.Navigation("Shelf");
                 });
 
             modelBuilder.Entity("Postieri.Models.Shelf", b =>
@@ -327,14 +442,46 @@ namespace Postieri.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Postieri.Models.Courier", b =>
+                {
+                    b.HasOne("Postieri.User", null)
+                        .WithOne()
+                        .HasForeignKey("Postieri.Models.Courier", "UserId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Postieri.Models.Vehicle", "Vehicle")
+                        .WithMany()
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("Postieri.Models.Order", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("Postieri.Models.Role", b =>
                 {
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("Postieri.Models.Shelf", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("Postieri.Models.Warehouse", b =>
                 {
                     b.Navigation("Shelves");
+                });
+
+            modelBuilder.Entity("Postieri.Models.Courier", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -42,7 +42,7 @@ namespace Postieri.Services
                 for (int i = 0; i < objList.Count; i++)
                 {
                     graphics.DrawString(objList[i].OrderId.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(50, currentYposition_values));
-                    graphics.DrawString(objList[i].ProductId.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(220, currentYposition_values));
+                  //  graphics.DrawString(objList[i].ProductId.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(220, currentYposition_values));
                     graphics.DrawString(objList[i].Date.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(400, currentYposition_values));
                     graphics.DrawString(objList[i].Price.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(500, currentYposition_values));
 
@@ -57,7 +57,7 @@ namespace Postieri.Services
                 for (int i = 0; i < 15; i++)
                 {
                     graphics.DrawString(objList[i].OrderId.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
-                    graphics.DrawString(objList[i].ProductId.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
+                   // graphics.DrawString(objList[i].ProductId.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
                     graphics.DrawString(objList[i].Date.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
                     graphics.DrawString(objList[i].Price.ToString(), new XFont("Arial", 15, XFontStyle.Bold), XBrushes.Black, new XPoint(100, 280));
 
@@ -83,7 +83,7 @@ namespace Postieri.Services
                         currentYposition_lines = 40;
                     }
                     graphics.DrawString(objList[i].OrderId.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(50, currentYposition_values));
-                    graphics.DrawString(objList[i].ProductId.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(220, currentYposition_values));
+               //     graphics.DrawString(objList[i].ProductId.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(220, currentYposition_values));
                     graphics.DrawString(objList[i].Date.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(400, currentYposition_values));
                     graphics.DrawString(objList[i].Price.ToString(), new XFont("Arial", 9, XFontStyle.Bold), XBrushes.Black, new XPoint(500, currentYposition_values));
 

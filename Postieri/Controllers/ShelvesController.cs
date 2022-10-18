@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,48 +17,47 @@ namespace Postieri.Controllers
     public class ShelvesController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public ShelvesController(DataContext context)
+      
+
+        public ShelvesController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+           
         }
 
         // GET: api/Shelves
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shelf>>> GetShelves()
+        public async Task<ActionResult<IEnumerable<ShelfWarehouseDto>>> GetShelves()
         {
-          if (_context.Shelves == null)
+            var shelves = await _context.Shelves.Include(sh => sh.Warehouse).Include(sh => sh.Products).ToListAsync();
+            if (_context.Shelves == null)
           {
               return NotFound();
           }
-            return await _context.Shelves.ToListAsync();
+            return Ok(_mapper.Map<IEnumerable<ShelfWarehouseDto>>(shelves));
         }
 
         // GET: api/Shelves/5
         [HttpGet("{id}")]
       
-        public async Task<ActionResult<Shelf>> GetShelfl(int id)
+        public async Task<ActionResult<ShelfWarehouseDto>> GetShelfl(int id)
         {
             if (_context.Shelves == null)
             {
                 return NotFound();
             }
 
-            var _shelf = _context.Shelves.Where(n => n.ShelfId == id).Select(shelf => new Shelf()
-            {
-                WarehouseId = shelf.WarehouseId,
-                BinLetter = shelf.BinLetter,
-                MaxProducts = shelf.MaxProducts,
-                ShelfId = shelf.ShelfId,
-                
-            }).FirstOrDefault();
+            var _shelf = _context.Shelves.Where(n => n.ShelfId == id).Include(sh => sh.Warehouse).Include(sh=>sh.Products).FirstOrDefault();
 
             if (_shelf == null)
             {
                 return NotFound();
             }
 
-            return _shelf;
+           return _mapper.Map<ShelfWarehouseDto>(_shelf);
         }
 
         // PUT: api/Shelves/5
@@ -73,11 +73,7 @@ namespace Postieri.Controllers
             var _shelf = _context.Shelves.FirstOrDefault(n => n.ShelfId == id);
             if (_shelf != null)
             {
-                _shelf.BinLetter = shelf.BinLetter;
-                _shelf.MaxProducts = shelf.MaxProducts;
-                _shelf.WarehouseId = shelf.WarehouseId;
-
-
+                _mapper.Map(shelf, _shelf);
                 _context.SaveChanges();
             }
 
@@ -93,20 +89,54 @@ namespace Postieri.Controllers
             {
                 return Problem("Entity set 'DataContext.Shelves'  is null.");
             }
-            
 
-            var _shelf = new Shelf()
-            {
-                ShelfId = shelf.ShelfId,
-                WarehouseId = shelf.WarehouseId,
-                BinLetter = shelf.BinLetter,
-                MaxProducts = shelf.MaxProducts
-          
-            };
+            var _shelf = new Shelf();
+            _mapper.Map(shelf, _shelf);
             _context.Shelves.Add(_shelf);
             _context.SaveChanges();
+            return CreatedAtAction(nameof(PostShelf), new { id = shelf.ShelfId }, shelf);
 
-            return CreatedAtAction("GetShelf", new { id = shelf.ShelfId }, shelf);
+        }
+        [HttpPost("add-product-to-shelf")]
+        public string AddProductToShelf(ProductDto products)
+        {
+
+            var product = new Product();
+            _mapper.Map(products, product);
+            
+            var shelf = _context.Shelves
+                .Find(products.ShelfId);
+
+            if (shelf.AvailableSlots < 1)
+            {
+                return "Shelf is full!";
+            }
+
+            _context.Products
+                .Add(product);
+
+            shelf.AvailableSlots--;
+
+            _context.SaveChanges();
+            return "Product was stored successfully!";
+
+        }
+        [HttpPost("remove-product-from-shelf")]
+        public void RemoveProductFromShelf(Guid product)
+        {
+            var _product = _context.Products
+                .Find(product);  
+
+            var shelf = _context.Shelves
+                .Find(_product.ShelfId);
+
+            _product.ShelfId = 0 ;
+            if(shelf != null)
+            {
+                shelf.AvailableSlots++;
+            }
+            _context.SaveChanges();
+
         }
 
         // DELETE: api/Shelves/5

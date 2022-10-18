@@ -4,22 +4,22 @@
 
 namespace Postieri.Migrations
 {
-    public partial class suspend : Migration
+    public partial class RemoveTitle : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "IsSuspened",
-                table: "Users",
-                newName: "IsSuspended");
+            migrationBuilder.DropColumn(
+                name: "Title",
+                table: "Users");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "IsSuspended",
+            migrationBuilder.AddColumn<string>(
+                name: "Title",
                 table: "Users",
-                newName: "IsSuspened");
+                type: "nvarchar(max)",
+                nullable: true);
         }
     }
 }

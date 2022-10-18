@@ -84,6 +84,7 @@ namespace Postieri.Services
                 response.IDs = user.UserId;
                 response.Data = "Welcome " + user.Username;
                 response.Message = "Login successful!";
+                response.Token = user.VerificationToken;
             }
 
             return response;
@@ -189,7 +190,8 @@ namespace Postieri.Services
             using (var hmac = new HMACSHA512(passwordSalt))
             {
                 var computedHash =
-                    hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                    hmac.ComputeHash(System.Text.Encoding.UTF8
+                    .GetBytes(password));
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
@@ -253,6 +255,7 @@ namespace Postieri.Services
                 };
             }
             user.IsSuspended = true;
+            user.Status = "Suspended";
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
@@ -275,6 +278,7 @@ namespace Postieri.Services
                 };
             }
             user.IsSuspended = false;
+            user.Status = "Active";
             await _context.SaveChangesAsync();
             return new ServiceResponse<string>
             {
@@ -311,7 +315,35 @@ namespace Postieri.Services
             user.RoleName = role.RoleName;
             user.VerificationToken = CreateToken(user); //new jwt needed bc the ClaimTypes.Role has to change regarding the new Role assignment
 
-            await _context.SaveChangesAsync();
+            if (role.RoleName == "Courier")
+            {
+
+                Courier courier = new Courier()
+                {
+                    UserId = user.UserId,
+                    CompanyName = user.CompanyName,
+                    RoleName = user.RoleName,
+                    PasswordSalt = user.PasswordSalt,
+                    Username = user.Username,
+                    Email = user.Email,
+                    VehicleId = 1,
+                    PasswordHash = user.PasswordHash,
+                    PhoneNumber = user.PhoneNumber,
+                    RoleId = user.RoleId,
+                    RegisterDate = user.RegisterDate,
+                    IsActive = user.IsActive,
+                    ExpirationDate = user.ExpirationDate,
+                    VerifiedAt = user.VerifiedAt,
+                    IsSuspended = user.IsSuspended,
+                    VerificationToken = user.VerificationToken,
+                    PasswordResetToken = user.PasswordResetToken,
+                    ResetTokenExpires = user.ResetTokenExpires,
+                };
+
+                _context.Users.Remove(user);
+                _context.Couriers.Add(courier);
+            }
+                await _context.SaveChangesAsync();
 
             return new ServiceResponse<string> 
             { 
