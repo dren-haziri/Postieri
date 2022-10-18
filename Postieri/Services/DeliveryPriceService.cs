@@ -32,43 +32,28 @@ namespace Postieri.Services
             }
             else
             {
-                if (deliveryPrice.CountryTo.ToUpper() == "Kosove".ToUpper())
-                {
-                    deliveryPrice.TotalPrice = 2;
-                }
-                else if (deliveryPrice.CountryTo.ToUpper() == "Shqiperi".ToUpper())
-                {
-                    deliveryPrice.TotalPrice = 3;
-                }
-                else if (deliveryPrice.CountryTo.ToUpper() == "Maqedoni".ToUpper())
-                {
-                    deliveryPrice.TotalPrice = 4;
-                }
-                else if (deliveryPrice.CountryTo.ToUpper() == "Montenegro".ToUpper())
-                {
-                    deliveryPrice.TotalPrice = 4;
-                }
-                else
-                {
-                    deliveryPrice.TotalPrice = 20;
-                }
+                deliveryPrice.TotalPrice = 2;
 
-                if (deliveryPrice.Dimension.name.ToLower() == "largepackage" || deliveryPrice.Dimension.name.ToLower() == "large")
+                if (deliveryPrice.Dimension.width > 120 || deliveryPrice.Dimension.height > 80 || deliveryPrice.Dimension.length > 80)
                 {
+                    return false;
+                }
+                else if(deliveryPrice.Dimension.width > 80 || deliveryPrice.Dimension.height > 60 || deliveryPrice.Dimension.length > 60)
+                {
+                    deliveryPrice.Dimension.name = "Large Package";
                     deliveryPrice.TotalPrice *= 3;
                 }
-                else if (deliveryPrice.Dimension.name.ToLower() == "mediumpackage" || deliveryPrice.Dimension.name.ToLower() == "medium")
+                else if (deliveryPrice.Dimension.width > 40 || deliveryPrice.Dimension.height > 30 || deliveryPrice.Dimension.length > 30)
                 {
+                    deliveryPrice.Dimension.name = "Medium Package";
                     deliveryPrice.TotalPrice *= 2;
-                }
-                else if (deliveryPrice.Dimension.name.ToLower() == "smallpackage" || deliveryPrice.Dimension.name.ToLower() == "small")
-                {
-                    deliveryPrice.TotalPrice *= 1;
                 }
                 else
                 {
-                    deliveryPrice.TotalPrice *= 5;
+                    deliveryPrice.Dimension.name = "Small Package";
+                    deliveryPrice.TotalPrice *= 1;
                 }
+
                 _context.DeliveryPrices.Add(deliveryPrice);
                 _context.SaveChanges();
                 return true;
