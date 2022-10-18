@@ -38,7 +38,7 @@ namespace Postieri.Controllers
             {
                 return NotFound();
             }
-          
+
                    return Ok(_mapper.Map<IEnumerable<WarehouseShelvesDto>>(warehouses));
         }
 
@@ -50,7 +50,6 @@ namespace Postieri.Controllers
             {
                 return NotFound();
             }
-            
                 
             var _warehouse = _context.Warehouse.Where(n => n.WarehouseId == id).Include(w=>w.Shelves).FirstOrDefault();
 

@@ -27,6 +27,7 @@ using System.Text;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 using AutoMapper;
 using Postieri.Mappings;
+using Postieri.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
