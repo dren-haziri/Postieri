@@ -92,13 +92,11 @@ namespace Postieri.Services
         }
         public List<Business> GetBusinessesByEmail(string email)
         {
-            var business = _context.Businesses.FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower()));
-            return _context.Businesses.Where(o => o.Email == business.Email).ToList();
+             return _context.Businesses.Where(x => x.Email.ToLower().Equals(email.ToLower())).ToList();
         }
         public List<Business> GetBusinessByToken(string token)
         {
-           var business = _context.Businesses.FirstOrDefault(x => x.BusinessToken.Equals(token));
-            return _context.Businesses.Where(o => o.BusinessToken == business.BusinessToken).ToList();
+             return  _context.Businesses.Where(x => x.BusinessToken.Equals(token)).ToList();
         }
         private string CreateToken(Business business)
         {
