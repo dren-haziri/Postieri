@@ -1,21 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Postieri.Data;
+﻿using Postieri.Data;
 
-namespace Postieri.Controllers
+namespace Postieri.Services
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+    public class CalculationService : ICalculationService
     {
-        private readonly DataContext _context;
-
-        public ProductsController(DataContext context)
+        public readonly DataContext _context;
+        public CalculationService(DataContext context)
         {
             _context = context;
         }
 
-        [HttpGet]
         public string CalculateSize(double length, double width, double height)
         {
             //Small Package Width
