@@ -29,6 +29,18 @@ namespace Postieri.Controllers
             _authService = authService;
         }
 
+        [HttpGet, Authorize]
+        public ActionResult<string> GetMe()
+        {
+            var userName = _authService.GetMyName();
+            return Ok(userName);
+        }
+        [HttpGet("getorders"), Authorize]
+        public ActionResult<List<Order>> GetOrders()
+        {
+            return Ok(_authService.GetOrders());
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult<ServiceResponse<int>>> Register(RegisterDto request)
         {
