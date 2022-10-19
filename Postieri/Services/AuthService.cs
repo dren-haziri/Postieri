@@ -82,7 +82,7 @@ namespace Postieri.Services
             else
             {
                 response.IDs = user.UserId;
-                response.Data = "Welcome " + user.Username;
+                response.Data =  user.Username;
                 response.Message = "Login successful!";
                 response.Token = user.VerificationToken;
             }
