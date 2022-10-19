@@ -13,6 +13,7 @@ namespace Postieri.DTO
         public string CompanyToken { get; set; }
         public int Phone { get; set; }
         public string Email { get; set; }
+        
 
     }
 }

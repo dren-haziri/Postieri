@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
 using Postieri.DTO;
@@ -11,11 +12,13 @@ namespace Postieri.Services
     public class OrderService : IOrderService
     {
         private readonly DataContext _context;
+
         private readonly IMapper _mapper;
         public OrderService(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+
         }
 
         public Order GetOrder(Guid id)
@@ -84,7 +87,8 @@ namespace Postieri.Services
             return alreadyExist;
         }
 
-        public void setStatus(Guid orderId, string status)
+        public void setStatus(Guid orderId, string status, Guid courier)
+
         {
             var ordersFromDb = _context.Orders
                 .Where(n => n.OrderId == orderId)
@@ -99,9 +103,61 @@ namespace Postieri.Services
                     _context.Orders.Remove(ordersFromDb);
                     _context.SaveChanges();
                 }
+                else if (status == "accept")
+                {
+
+                    foreach (Product product in ordersFromDb.Products)
+                    {
+
+                        product.ShelfId = GetAvailableShelf();
+                        _context.SaveChanges();
+
+                    }
+                }
+                else if (status == "transfer")
+                {
+                    assignCourierToOrder(orderId, courier);
+                    foreach (Product product in ordersFromDb.Products)
+                    {
+
+                        RemoveProductFromShelf(product.ProductId);
+                        _context.SaveChanges();
+
+                    }
+                }
                 _context.SaveChanges();
             };
         }
+
+
+        public void RemoveProductFromShelf(Guid product)
+        {
+            var _product = _context.Products
+                .Find(product);
+
+            var shelf = _context.Shelves
+                .Find(_product.ShelfId);
+
+            _product.ShelfId = 0;
+            if (shelf != null)
+            {
+                shelf.AvailableSlots++;
+            }
+            _context.SaveChanges();
+
+        }
+        public int GetAvailableShelf()
+        {
+            var freeShelf = _context.Shelves.Where(s => s.AvailableSlots > 0).FirstOrDefault();
+            if (freeShelf != null)
+            {
+                freeShelf.AvailableSlots--;
+                return freeShelf.ShelfId;
+            }
+            return 0;
+
+        }
+
 
         public void assignCourierToOrder(Guid orderId, Guid courierId)
         {

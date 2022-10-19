@@ -10,7 +10,7 @@ namespace Postieri.Interfaces
         ActionResult<List<Order>> GetAllOrders();
         bool PostOrder(OrderDto order);
         bool DeleteOrder(Guid OrderId);
-        void setStatus(Guid orderId, string status);
+        void setStatus(Guid orderId, string status, Guid courier);
         void assignCourierToOrder(Guid orderId, Guid courierId);
     }
 }
