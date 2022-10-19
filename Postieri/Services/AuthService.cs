@@ -39,7 +39,7 @@ namespace Postieri.Services
         {
             var result = GetMyName();
             var courier = _context.Users.Where(x => x.Email == result).FirstOrDefault();
-            var orders = _context.Orders.Where(x => x.CourierId == courier.UserId).Include(x => x.Products).ToList();
+            var orders = _context.Orders.Where(x => x.UserId == courier.UserId).Include(x => x.Products).ToList();
             return orders;
         }
 

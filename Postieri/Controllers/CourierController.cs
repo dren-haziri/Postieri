@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Postieri.DTOs;
 using Postieri.Models;
@@ -22,10 +23,10 @@ namespace Postieri.Controllers
              _courierService.UpdateStatus(orderId, status);
             return Ok();
         }
-        [HttpGet("orders")]
-        public ActionResult<List<Order>> GetOrdersForCourier(Guid courierId)
+        [HttpGet("orders"), Authorize]
+        public ActionResult<List<Order>> GetOrdersForCourier()
         {
-            return Ok(_courierService.GetOrdersForCourier(courierId));    
+            return Ok(_courierService.GetOrdersForCourier());    
         }
         [HttpPut("accept-order")]
         public ActionResult<List<StatusOrderDto>> AcceptOrder(Guid order, Guid courierId)

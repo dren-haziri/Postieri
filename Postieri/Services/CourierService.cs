@@ -4,16 +4,19 @@ using Newtonsoft.Json;
 using Postieri.Data;
 using Postieri.DTOs;
 using Postieri.Models;
+using System.Security.Claims;
 
 namespace Postieri.Services
 {
     public class CourierService : ICourierService
     {
         private readonly DataContext _dbcontext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CourierService(DataContext dbcontext)
+        public CourierService(DataContext dbcontext, IHttpContextAccessor httpContextAccessor)
         {
             _dbcontext = dbcontext;
+            _httpContextAccessor = httpContextAccessor;
         }
         public void UpdateStatus(Guid orderId, string status)
         {
@@ -23,12 +26,24 @@ namespace Postieri.Services
                  order.Status = status;
                 _dbcontext.SaveChanges();
             }
-        } 
-        public List<Order> GetOrdersForCourier(Guid courierId)
+        }
+
+        public string GetMyName()
         {
-            var CourierUserId = _dbcontext.Users.Find(courierId);
-            return _dbcontext.Orders.Where(o => o.CourierId == CourierUserId.UserId).ToList();
-        }  
+            var result = string.Empty;
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            }
+            return result;
+        }
+        public List<Order> GetOrdersForCourier()
+        {
+            var result = GetMyName();
+            var courier = _dbcontext.Users.Where(x => x.Email == result).FirstOrDefault();
+            var orders = _dbcontext.Orders.Where(x => x.CourierId == courier.UserId).Include(x => x.Products).ToList();
+            return orders;
+        }     
         public bool AcceptOrder(Guid order, Guid courierId)
         {
             var orderId = _dbcontext.Orders.Find(order);
