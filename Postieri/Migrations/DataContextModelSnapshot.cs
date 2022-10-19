@@ -50,6 +50,8 @@ namespace Postieri.Migrations
 
                     b.ToTable("DeliveryPrices");
 
+                });
+
             modelBuilder.Entity("Postieri.Models.Business", b =>
                 {
                     b.Property<int>("BusinessID")
