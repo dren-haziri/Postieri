@@ -23,11 +23,6 @@ namespace Postieri.Controllers
              _courierService.UpdateStatus(orderId, status);
             return Ok();
         }
-        [HttpGet("orders"), Authorize]
-        public ActionResult<List<Order>> GetOrdersForCourier()
-        {
-            return Ok(_courierService.GetOrdersForCourier());    
-        }
         [HttpPut("accept-order")]
         public ActionResult<List<StatusOrderDto>> AcceptOrder(Guid order, Guid courierId)
         {

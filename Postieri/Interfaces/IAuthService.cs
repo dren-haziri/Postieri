@@ -15,7 +15,5 @@ namespace Postieri.Interfaces
         Task<ServiceResponse<string>> Unsuspend(string email);
         Task<ServiceResponse<string>> AssignRole(string email, Guid roleId);
         Task<ServiceResponse<string>> RevokeRole(string email);
-        string GetMyName();
-        List<Order> GetOrders();
     }
 }

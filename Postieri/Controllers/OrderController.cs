@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
@@ -47,6 +48,11 @@ namespace Postieri.Controllers
         public ActionResult<Order> GetOrderById(Guid OrderId)
         {
             return Ok(_orderService.GetOrderById(OrderId));
+        }
+        [HttpGet("getordersbyrole"), Authorize]
+        public ActionResult<List<Order>> GetOrders()
+        {
+            return Ok(_orderService.GetOrdersByRole());
         }
     }
 }

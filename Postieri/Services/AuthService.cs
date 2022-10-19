@@ -18,31 +18,12 @@ namespace Postieri.Services
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(DataContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public AuthService(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
         }
-        public string GetMyName()
-        {
-            var result = string.Empty;
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            }
-            return result;
-        }
-        public List<Order> GetOrders()
-        {
-            var result = GetMyName();
-            var courier = _context.Users.Where(x => x.Email == result).FirstOrDefault();
-            var orders = _context.Orders.Where(x => x.UserId == courier.UserId).Include(x => x.Products).ToList();
-            return orders;
-        }
-
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
             if (await UserExists(user.Email))

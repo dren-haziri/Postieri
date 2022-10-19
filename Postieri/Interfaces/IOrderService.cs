@@ -9,5 +9,6 @@ namespace Postieri.Interfaces
         bool AddOrder(Order request);
         bool UpdateOrder(Order request);
         bool DeleteOrder(Guid OrderId);
+        List<Order> GetOrdersByRole();
     }
 }
