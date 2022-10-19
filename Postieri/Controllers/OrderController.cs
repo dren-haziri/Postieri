@@ -45,9 +45,9 @@ namespace Postieri.Controllers
         }
 
         [HttpPut("UpdateStatusOfOrder")]
-        public ActionResult<List<Order>> setStatus(Guid orderId, string status, Guid courier)
+        public ActionResult<List<Order>> setStatus(StatusOrderDto order, Guid courier)
         {
-            _orderService.setStatus(orderId, status, courier);
+            _orderService.setStatus(order.OrderId, order.Status, courier);
             return Ok();
         }
 
