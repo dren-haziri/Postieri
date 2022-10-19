@@ -12,5 +12,6 @@ namespace Postieri.Interfaces
         bool DeleteOrder(Guid OrderId);
         void setStatus(Guid orderId, string status);
         void assignCourierToOrder(Guid orderId, Guid courierId);
+        string CalculateSize(double length, double width, double height);
     }
 }
