@@ -169,6 +169,71 @@ namespace Postieri.Services
                 _context.SaveChanges();
             }
         }
+        public string CalculateSize(double length, double width, double height)
+        {
+            
+            var SPWidth = from d in _context.Dimensions
+                          where d.name == "SmallPackage"
+                          select d.width;
+            var SmallPackageWidth = SPWidth.FirstOrDefault();
+             
+            var SPHeight = from d in _context.Dimensions
+                           where d.name == "SmallPackage"
+                           select d.height;
+            var SmallPackageHeight = SPHeight.FirstOrDefault();
+           
+            var SPLength = from d in _context.Dimensions
+                           where d.name == "SmallPackage"
+                           select d.length;
+            var SmallPackageLength = SPLength.FirstOrDefault();
+            
+            var MPHeight = from d in _context.Dimensions
+                           where d.name == "MediumPackage"
+                           select d.height;
+            var MediumPackageHeight = MPHeight.FirstOrDefault();
+
+            
+            var MPWidth = from d in _context.Dimensions
+                          where d.name == "MediumPackage"
+                          select d.width;
+            var MediumPackageWidth = MPWidth.FirstOrDefault();
+            
+            var MPLength = from d in _context.Dimensions
+                           where d.name == "MediumPackage"
+                           select d.length;
+            var MediumPackageLength = MPLength.FirstOrDefault();
+             
+            var LPLength = from d in _context.Dimensions
+                           where d.name == "LargePackage"
+                           select d.length;
+            var LargePackageLength = LPLength.FirstOrDefault();
+             
+            var LPwidth = from d in _context.Dimensions
+                          where d.name == "LargePackage"
+                          select d.width;
+            var LargePackageWidth = LPwidth.FirstOrDefault();
+             
+            var LPHeight = from d in _context.Dimensions
+                           where d.name == "LargePackage"
+                           select d.height;
+            var LargePackageHeight = LPHeight.FirstOrDefault();
+
+
+            if (height < SmallPackageHeight && width < SmallPackageWidth && length < SmallPackageLength)
+            {
+                return ("this is a small package");
+            }
+
+            else if (height > SmallPackageHeight && height < MediumPackageHeight && width > SmallPackageWidth && width < MediumPackageWidth && length > SmallPackageLength && length < MediumPackageLength)
+            {
+                return ("this is a medium package");
+            }
+            else if (length > MediumPackageLength && length < LargePackageLength && width > MediumPackageWidth && width < LargePackageWidth && height > MediumPackageHeight && height < LargePackageHeight)
+            {
+                return ("this is a large package");
+            }
+            return ("we do not ship this kind of package, please contact our staff for further details");
+        }
     }
 }
 

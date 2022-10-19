@@ -57,5 +57,11 @@ namespace Postieri.Controllers
             _orderService.assignCourierToOrder(orderId, courierId);
             return Ok();
         }
+        [HttpGet("CalculateSize")]
+        public string CalculateSize(double length, double width, double height)
+        {
+            return _orderService.CalculateSize(length, width, height);
+
+        }
     }
 }
