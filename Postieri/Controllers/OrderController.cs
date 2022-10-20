@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
@@ -45,9 +46,9 @@ namespace Postieri.Controllers
         }
 
         [HttpPut("UpdateStatusOfOrder")]
-        public ActionResult<List<Order>> setStatus(Guid orderId, string status)
+        public ActionResult<List<Order>> setStatus(StatusOrderDto order, Guid courier)
         {
-            _orderService.setStatus(orderId, status);
+            _orderService.setStatus(order.OrderId, order.Status, courier);
             return Ok();
         }
 
@@ -56,6 +57,17 @@ namespace Postieri.Controllers
         {
             _orderService.assignCourierToOrder(orderId, courierId);
             return Ok();
+        }
+        [HttpGet("CalculateSize")]
+        public string CalculateSize(double length, double width, double height)
+        {
+            return _orderService.CalculateSize(length, width, height);
+
+        }
+        [HttpGet("getordersbyrole"), Authorize]
+        public ActionResult<List<Order>> GetOrders()
+        {
+            return Ok(_orderService.GetOrdersByRole());
         }
     }
 }

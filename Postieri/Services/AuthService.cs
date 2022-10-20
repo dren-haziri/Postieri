@@ -24,7 +24,6 @@ namespace Postieri.Services
             _context = context;
             _configuration = configuration;
         }
-
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
             if (await UserExists(user.Email))
@@ -82,7 +81,7 @@ namespace Postieri.Services
             else
             {
                 response.IDs = user.UserId;
-                response.Data = "Welcome " + user.Username;
+                response.Data =  user.Username;
                 response.Message = "Login successful!";
                 response.Token = user.VerificationToken;
             }
