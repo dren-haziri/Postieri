@@ -15,8 +15,11 @@ namespace Postieri.Services
 
         public double GetTotal()
         {
-            var orders = _dbcontext.Orders.Where(o=>o.Status =="transfer").ToList();
+            var orders = _dbcontext.Orders
+                .Where(o=>o.Status =="transfer")
+                .ToList();
             double total = 0;
+
             foreach (var order in orders)
             {
                 total =+ order.Price;
@@ -34,7 +37,10 @@ namespace Postieri.Services
 
         public int OrdersInLastThreeMonths()
         {
-         return _dbcontext.Orders.Where(o => o.Status == "accept" && o.OrderedOn>=DateTime.Now.AddMonths(-3)).ToList().Count;
+         return _dbcontext.Orders
+                .Where(o => o.Status == "accept" && o.OrderedOn>=DateTime.Now
+                .AddMonths(-3))
+                .ToList().Count;
         }
 
         public int AvailableVehicles()
@@ -46,17 +52,23 @@ namespace Postieri.Services
 
         public int OrdersAccepted()
         {
-            var acceptedOrders = _dbcontext.Orders.Where(x => x.Status == "accept").Count();
+            var acceptedOrders = _dbcontext.Orders
+                .Where(x => x.Status == "accept")
+                .Count();
             return acceptedOrders;
         }
         public int OrdersAtTheCourier()
         {
-            var atCourier = _dbcontext.Orders.Where(x => x.CourierId != null).Count();
+            var atCourier = _dbcontext.Orders
+                .Where(x => x.CourierId != null)
+                .Count();
             return atCourier;
         }
         public int LastSevenDays()
         {
-            var lastSevenDays = _dbcontext.Orders.Where(x => x.Date > DateTime.Now.AddDays(-7)).Count();
+            var lastSevenDays = _dbcontext.Orders
+                .Where(x => x.Date > DateTime.Now
+                .AddDays(-7)).Count();
             return lastSevenDays;
         }
     }
