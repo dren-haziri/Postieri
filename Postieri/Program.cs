@@ -27,6 +27,7 @@ using System.Text;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 using AutoMapper;
 using Postieri.Mappings;
+using Postieri.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -84,10 +85,13 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IExportDataPdfService, ExportDataPdfService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDeliveryPriceService, DeliveryPriceService>();
 builder.Services.AddScoped<IBusinessIntegrationService, BusinessIntegrationService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddAutoMapper(typeof(OrderMapper).Assembly);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICourierService, CourierService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

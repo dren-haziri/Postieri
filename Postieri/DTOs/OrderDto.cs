@@ -5,7 +5,7 @@ namespace Postieri.DTO
     public class OrderDto
     {
         public Guid OrderId { get; set; }
-        public List<Product> Products { get; set; }
+        public List<ProductDto> Products { get; set; }
         public DateTime Date { get; set; }
         public DateTime OrderedOn { get; set; }
         public double Price { get; set; }
@@ -13,6 +13,7 @@ namespace Postieri.DTO
         public string CompanyToken { get; set; }
         public int Phone { get; set; }
         public string Email { get; set; }
+        
 
     }
 }

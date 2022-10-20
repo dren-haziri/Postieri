@@ -1,14 +1,18 @@
-﻿using Postieri.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Postieri.DTO;
+using Postieri.Models;
 
 namespace Postieri.Interfaces
 {
     public interface IOrderService
     {
-        List<Order> GetOrders();
-        List<Order> GetOrderById(Guid OrderId);
-        bool AddOrder(Order request);
-        bool UpdateOrder(Order request);
+        Order GetOrder(Guid id);
+        ActionResult<List<Order>> GetAllOrders();
+        bool PostOrder(OrderDto order);
         bool DeleteOrder(Guid OrderId);
         List<Order> GetOrdersByRole();
+        void setStatus(Guid orderId, string status, Guid courier);
+        void assignCourierToOrder(Guid orderId, Guid courierId);
+        string CalculateSize(double length, double width, double height);
     }
 }
