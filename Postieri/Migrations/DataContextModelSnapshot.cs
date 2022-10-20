@@ -50,11 +50,11 @@ namespace Postieri.Migrations
 
                     b.ToTable("DeliveryPrices");
 
-            modelBuilder.Entity("Postieri.Models.Business", b =>
-                {
-                    b.Property<int>("BusinessID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    modelBuilder.Entity("Postieri.Models.Business", b =>
+                        {
+                            b.Property<int>("BusinessID")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
 
                             SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BusinessID"), 1L, 1);
 
