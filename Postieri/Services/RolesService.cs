@@ -1,6 +1,5 @@
 ﻿using Postieri.Data;
 using Postieri.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Postieri.Services
 {
@@ -13,7 +12,7 @@ namespace Postieri.Services
         }
         public List<Role> GetRoles()
         {
-            return _context.Roles.Include(x => x.Users).ToList();
+            return _context.Roles.ToList();
         }
         public bool AddRole(Role request)
         {
@@ -23,7 +22,11 @@ namespace Postieri.Services
                 RoleName = request.RoleName,
                 Description = request.Description,
             };
-            if (RoleExistsOrNull(role))
+            if(role == null)
+            {
+                return false;
+            }
+            else if(RoleExists(role))
             {
                 return false;
             }
@@ -37,8 +40,11 @@ namespace Postieri.Services
         public bool UpdateRole(Role request)
         {
             var role = _context.Roles.Find(request.RoleId);
-            
-            if (!RoleExistsOrNull(role))
+            if (role == null)
+            {
+                return false;
+            }
+            else if (!RoleExists(role))
             {
                 return false;
             }
@@ -71,6 +77,7 @@ namespace Postieri.Services
                     Success = false,
                     Message = "Can not delete this role, cause there are users with this role!"
                 };
+
             }
             _context.Roles.Remove(role);
             _context.SaveChanges();
@@ -80,13 +87,10 @@ namespace Postieri.Services
                 Message = "Role deleted successfully"
             };
         }
-        public bool RoleExistsOrNull(Role request)
+        public bool RoleExists(Role request)
         {
-            if (request == null)
-            { 
-                return true; 
-            }
-            return _context.Roles.Any(x => x.RoleId == request.RoleId || x.RoleName == request.RoleName);
+            bool alreadyExist = _context.Roles.Any(x => x.RoleId == request.RoleId || x.RoleName == request.RoleName || x.Description == request.Description);
+            return alreadyExist;
         }
     }
 }
