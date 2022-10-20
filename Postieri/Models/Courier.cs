@@ -13,7 +13,7 @@ namespace Postieri.Models
         public int VehicleId { get; set; }
         public Vehicle? Vehicle { get; set; }
 
-        public List<Order>? Orders { get; set; }
+        public List<Order>? Orders { get; set; }    
 
     }
 }

@@ -5,8 +5,6 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Postieri", "Postieri\Postieri.csproj", "{A50C536A-D02D-45F4-BC3C-901325E99163}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTesting", "ClientTesting\ClientTesting.csproj", "{BFA22D34-A12C-46D7-8B0E-3D257CFECBB8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{A50C536A-D02D-45F4-BC3C-901325E99163}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A50C536A-D02D-45F4-BC3C-901325E99163}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A50C536A-D02D-45F4-BC3C-901325E99163}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BFA22D34-A12C-46D7-8B0E-3D257CFECBB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFA22D34-A12C-46D7-8B0E-3D257CFECBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFA22D34-A12C-46D7-8B0E-3D257CFECBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFA22D34-A12C-46D7-8B0E-3D257CFECBB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
