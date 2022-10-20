@@ -39,7 +39,7 @@ namespace Postieri.Controllers
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<IEnumerable<WarehouseShelvesDto>>(warehouses));
+                   return Ok(_mapper.Map<IEnumerable<WarehouseShelvesDto>>(warehouses));
         }
 
         // GET: api/Warehouses/5
@@ -50,8 +50,9 @@ namespace Postieri.Controllers
             {
                 return NotFound();
             }
-            
-            var _warehouse = _context.Warehouse.Where(n => n.WarehouseId == id).Include(w => w.Shelves).FirstOrDefault();
+                
+            var _warehouse = _context.Warehouse.Where(n => n.WarehouseId == id).Include(w=>w.Shelves).FirstOrDefault();
+
 
             if (_warehouse == null)
             {
@@ -60,7 +61,7 @@ namespace Postieri.Controllers
 
             return Ok(_mapper.Map<WarehouseShelvesDto>(_warehouse));
 
-
+           
         }
 
         // PUT: api/Warehouses/5

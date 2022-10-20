@@ -1,25 +1,24 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
 using Postieri.Data;
 using Postieri.DTO;
 using Postieri.Models;
 using System.Linq;
-using System.Security.Claims;
 
 namespace Postieri.Services
 {
     public class OrderService : IOrderService
     {
         private readonly DataContext _context;
+
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        
-        public OrderService(DataContext context, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        public OrderService(DataContext context, IMapper mapper)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+
         }
 
         public Order GetOrder(Guid id)
@@ -88,50 +87,8 @@ namespace Postieri.Services
             return alreadyExist;
         }
 
-        private string GetMyName()
-        {
-            var result = string.Empty;
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            }
-            return result;
-        }
-        
-        private string GetRole()
-        {
-            var role = string.Empty;
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                role = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
-            }
-            return role;
-        }
-        
-        public List<Order> GetOrdersByRole()
-        {
-            var result = GetMyName();
-            var role = GetRole();
-          
-            if (role == "Courier")
-            {
-                var courier = _context.Users.Where(x => x.Email == result).FirstOrDefault();
-                var orders = _context.Orders.Where(x => x.CourierId == courier.UserId).Include(x => x.Products).ToList();
-                return orders;
-            }
-            else if (role == "Manager" || role == "Administrator")
-            {
-                return _context.Orders.Include(x => x.Products).ToList();
-            }
-            else if(role == "Storekeeper")
-            {
-                return _context.Orders.Where(x => x.Status == "accept").Include(x => x.Products).ToList();
-            }
-            var user = _context.Users.Where(x => x.Email == result).FirstOrDefault();
-            return _context.Orders.Where(x => x.UserId == user.UserId).Include(x => x.Products).ToList();
-        }
-
         public void setStatus(Guid orderId, string status, Guid courier)
+
         {
             var ordersFromDb = _context.Orders
                 .Where(n => n.OrderId == orderId)
@@ -172,6 +129,7 @@ namespace Postieri.Services
             };
         }
 
+
         public void RemoveProductFromShelf(Guid product)
         {
             var _product = _context.Products
@@ -188,7 +146,6 @@ namespace Postieri.Services
             _context.SaveChanges();
 
         }
-        
         public int GetAvailableShelf()
         {
             var freeShelf = _context.Shelves.Where(s => s.AvailableSlots > 0).FirstOrDefault();
@@ -201,6 +158,7 @@ namespace Postieri.Services
 
         }
 
+
         public void assignCourierToOrder(Guid orderId, Guid courierId)
         {
             var courier = _context.Couriers.Find(courierId);
@@ -211,7 +169,6 @@ namespace Postieri.Services
                 _context.SaveChanges();
             }
         }
-        
         public string CalculateSize(double length, double width, double height)
         {
             
@@ -260,6 +217,7 @@ namespace Postieri.Services
                            where d.name == "LargePackage"
                            select d.height;
             var LargePackageHeight = LPHeight.FirstOrDefault();
+
 
             if (height < SmallPackageHeight && width < SmallPackageWidth && length < SmallPackageLength)
             {
