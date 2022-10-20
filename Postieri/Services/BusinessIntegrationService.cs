@@ -48,18 +48,6 @@ namespace Postieri.Services
             return true;
 
         }
-        public List<Business> GetBusinesses()
-        {
-            return _context.Businesses.ToList();
-        }
-        public List<Business> GetBusinessesByEmail(string email)
-        {
-             return _context.Businesses.Where(x => x.Email.ToLower().Equals(email.ToLower())).ToList();
-        }
-        public List<Business> GetBusinessByToken(string token)
-        {
-             return  _context.Businesses.Where(x => x.BusinessToken.Equals(token)).ToList();
-        }
         private string CreateToken(Business business)
         {
             List<Claim> claims = new List<Claim>
