@@ -42,7 +42,22 @@ namespace Postieri.Services
             return _dbcontext.Vehicles
                 .Where(v=>v.IsAvailable==true && v.HasDefect==false)
                 .ToList().Count;
+        }
 
+        public int OrdersAccepted()
+        {
+            var acceptedOrders = _dbcontext.Orders.Where(x => x.Status == "accept").Count();
+            return acceptedOrders;
+        }
+        public int OrdersAtTheCourier()
+        {
+            var atCourier = _dbcontext.Orders.Where(x => x.CourierId != null).Count();
+            return atCourier;
+        }
+        public int LastSevenDays()
+        {
+            var lastSevenDays = _dbcontext.Orders.Where(x => x.Date > DateTime.Now.AddDays(-7)).Count();
+            return lastSevenDays;
         }
     }
 }

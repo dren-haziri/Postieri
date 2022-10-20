@@ -18,14 +18,34 @@ namespace Postieri.Controllers
             _dashboard = dashboard;
         }
 
-
         [HttpGet("GetTotal")]
         public double GetTotal()
         {
             return _dashboard.GetTotal();
         }
+
         [HttpGet("OrdersOfLastThreeMonths")]
-        public int OrdersInLastThreeMonths() { return _dashboard.OrdersInLastThreeMonths(); }
+        public int OrdersInLastThreeMonths() { 
+            return _dashboard.OrdersInLastThreeMonths(); 
+        }
+
+        [HttpGet("AcceptedOrders")]
+        public int OrdersAccepted()
+        {
+            return _dashboard.OrdersAccepted();
+        }
+
+        [HttpGet("OrdersAtTheCourier")]
+        public int OrdersAtTheCourier()
+        {
+            return _dashboard.OrdersAtTheCourier();
+        }
+
+        [HttpGet("LastSevenDays")]
+        public int LastSevenDays()
+        {
+            return _dashboard.LastSevenDays();
+        }
 
     }
 }
