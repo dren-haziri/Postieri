@@ -24,7 +24,6 @@ namespace Postieri.Services
             _context = context;
             _configuration = configuration;
         }
-
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
             if (await UserExists(user.Email))
